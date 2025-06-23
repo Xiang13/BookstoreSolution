@@ -1,0 +1,126 @@
+.swiper-container {
+  position: relative;
+  padding: 0 60px; /* 預留左右箭頭顯示空間 */
+  overflow: hidden;* {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  box-sizing: border-box;
+}
+
+#site-header a {
+  text-decoration: none;
+  color: white;
+}
+
+#site-header a:hover {
+  color: #0a58ca;
+  text-decoration: underline;
+}
+
+.container{
+  padding-right: 100px;
+}
+
+.container .header{
+  margin: 30px;
+}
+
+.card-list .card-item .card-link{
+  width: 200px;
+  user-select: none;
+  display: block;
+  text-decoration: none;
+}
+
+.card-list .card-link .card-image {
+  width: 100%;  
+}
+
+.card-list .card-link .card-title{
+  margin: 10px 0px;
+  padding:10px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.card-wrapper .card-list{
+  width: 100%;
+}
+
+.card-wrapper .swiper-button-next {
+  
+}
+
+.card-wrapper .swiper-slide-button {
+  margin-top: -60px;
+}
+
+.category {
+  cursor: pointer;
+}
+
+.rating {
+  color: orange;
+}
+
+@media screen and (max-width: 768px){
+  .card-wrapper {
+    margin: 0 10px 25px;
+  }
+
+  .card-wrapper .swiper-slide-button {
+    display: none;
+  }
+}
+}
+
+.swiper {
+  width: 100%;
+  position: relative;
+}
+
+.swiper-wrapper {
+  display: flex;
+}
+
+.swiper-slide {
+  width: auto; /* 或設定固定寬度 */
+  text-align: center;
+}
+
+.card-image {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+}
+
+.card-title {
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+
+/* 分頁圓點樣式 */
+.swiper-pagination {
+  bottom: 10px;
+}
+
+/* 左右箭頭樣式 */
+.swiper-button-prev,
+.swiper-button-next {
+  top: 35%;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: black;
+  border-radius: 50%;
+  z-index: 10;
+}
+
+.swiper-button-prev {
+  left: 10px;
+}
+
+.swiper-button-next {
+  right: 10px;
+}

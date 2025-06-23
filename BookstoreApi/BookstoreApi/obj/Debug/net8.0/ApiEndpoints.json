@@ -1,0 +1,28 @@
+[
+  {
+    "ContainingType": "BookstoreApi.Controllers.HomeController",
+    "Method": "GetBooksByCategory",
+    "RelativePath": "api/Home/carousel/{categoryName}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "categoryName",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookstoreApi.Controllers.HomeController",
+    "Method": "GetCategories",
+    "RelativePath": "api/Home/categories",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  }
+]

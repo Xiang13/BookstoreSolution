@@ -1,0 +1,69 @@
+<header id="site-header" class="text-white">
+            <nav class="navbar navbar-expand-lg px-4">
+                <div class="row w-100">
+                    <!-- 第一列 -->
+                    <div class="d-flex justify-content-between">
+                        <!-- 左側 -->
+                        <div class="col-md-6">
+                            <ul class="navbar-nav">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="http://127.0.0.1:5500/pages/home.html#" @click="$emit('home-click')">首頁</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- 右側 -->
+                        <div class="col-md-6 text-end">
+                            <ul class="navbar-nav flex-row justify-content-end">                                
+                                <li class="nav-item">
+                                    <a class="nav-link me-3" href="http://127.0.0.1:5500/pages/member.html?page=member">會員</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link me-3" href="http://127.0.0.1:5500/pages/member.html?page=orders">訂單</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link me-3" href="#" @click="$emit('login-click')">登入 / 註冊</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="http://127.0.0.1:5500/pages/member.html?page=cart">購物車</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 第二列 -->
+                    <div v-if="showSearch" class="d-flex align-items-center mt-3 mb-3">
+                        <!-- 左側 logo -->
+                        <div class="nav-left col-md-2">
+                            <span class="nav-link">
+                                <a href="#" class="p-2">LEFT bookstore</a>
+                            </span>
+                        </div>
+                        <!-- 中間 搜尋列 -->
+                        <div class="nav-fill col-md-8">
+                            <form class="w-100">
+                                <div class="input-group">
+                                    <!-- 分類選單 -->                                    
+                                    <select class="form-select" v-model="searchCategory" style="max-width: 120px;">
+                                        <option v-for="category in categories" :key="category.value" :value="category.value">
+                                            {{ category.name }}
+                                        </option>
+                                    </select>
+
+                                    <!-- 搜尋輸入欄 -->
+                                    <input type="text" class="form-control" placeholder="搜尋書籍" aria-label="搜尋書籍" />
+
+                                    <!-- 搜尋按鈕 -->
+                                    <button class="btn btn-warning" @click.prevent="$emit('select-category', searchCategory)">搜尋</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- 右側功能區 -->
+                        <div class="nav-right col-md-2 text-end">
+                            <span class="nav-link">
+                                <a href="#" class="p-2">RIGHT bookstore</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>

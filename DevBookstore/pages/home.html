@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>網路書店首頁</title>
+    <link rel="stylesheet" href="../assets/css/home.css">
+    <!-- bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 的圖示 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SwiperJs CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <!-- Vue CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <!-- Axios CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 標題 -->
+        <header-bar :categories="specialCategories" :reset="resetSearch" :show-search="true" @login-click="showLoginModal"
+            @home-click="goHome" @select-category="selectCategory"></header-bar>
+
+        <!-- 內容 -->
+        <div class="container">
+            <div class="row mt-5">
+                <!-- 側邊分類欄 -->
+                <side-bar :categories="categories" :currentcategory="currentTab" @select-category="selectCategory"></side-bar>
+                <!-- 書籍區塊 -->
+                <div class="col-md-10 swiper">
+                    <div>
+                        <h2>書籍專區</h2>
+                    </div>
+                    <!-- 作品輪播 -->
+                    <books-carousel v-if="currentTab === null && !selectedBook" :all-categories="allCategories"
+                        :books="books" @select-category="selectCategory"
+                        @select-book="selectedBook = $event"></books-carousel>
+                    <!-- 書籍展示 -->
+                    <books-list v-if="currentTab !== null && !selectedBook" :books="filteredBooks" :title="currentTab"
+                        @select-book="selectedBook = $event"> </books-list>
+                    <!-- 書籍詳細資料 -->
+                    <book-detail v-if="selectedBook" :book="selectedBook"></book-detail>
+                </div>
+            </div>
+        </div>
+
+        <!-- 頁尾 -->
+        <footer-bar :categories="specialCategories" :currentcategory="currentTab"
+            @select-category="selectCategory"></footer-bar>
+
+        <!-- 登入 / 註冊 -->
+        <login-modal v-if="showLogin" :visible="showLogin" @close-click="closeLoginModal"></login-modal>
+
+    </div>
+
+    <!-- SwiperJs Script -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <!-- 共用元件管理器 -->
+    <script src="../assets/js/init-vue-app.js"></script>
+    
+    <script>
+        // 頁面特定的資料
+        const homePageData = {
+            // 書籍類別資料
+            // categories: [
+            //     { name: "暢銷作品", value: "暢銷作品", isSpecial: true },
+            //     { name: "推薦作品", value: "推薦作品", isSpecial: true },
+            //     { name: "所有書籍", value: "所有書籍", isAllCategory: true },
+            //     { name: "心理勵志", value: "心理勵志" },
+            //     { name: "成長童書", value: "成長童書" },
+            //     { name: "小說文學", value: "小說文學" },
+            // ],
+            // 書籍資料
+            // books: [
+            //     { title: "The Let Them Theory", author: "Mel Robbins", price: 15.97, category: "心理勵志", image: "/assets/images/book01.jpg", rating: 4.5 },
+            //     { title: "Oh, the Places You'll Go!", author: "Dr. Seuss", price: 12.77, category: "成長童書", image: "/assets/images/book02.jpg", rating: 4.8 },
+            //     { title: "Sunrise on the Reaping", author: "Suzanne Collins", price: 19.47, category: "小說文學", image: "/assets/images/book03.jpg", rating: 4.9 },
+            //     { title: "The Let Them Theory", author: "Mel Robbins", price: 15.97, category: "心理勵志", image: "/assets/images/book04.jpg", rating: 4.5 },
+            //     { title: "Oh, the Places You'll Go!", author: "Dr. Seuss", price: 12.77, category: "成長童書", image: "/assets/images/book05.jpg", rating: 4.8 },
+            //     { title: "Sunrise on the Reaping", author: "Suzanne Collins", price: 19.47, category: "小說文學", image: "/assets/images/book01.jpg", rating: 4.9 },
+            //     { title: "The Let Them Theory", author: "Mel Robbins", price: 15.97, category: "心理勵志", image: "/assets/images/book02.jpg", rating: 4.5 },
+            //     { title: "Oh, the Places You'll Go!", author: "Dr. Seuss", price: 12.77, category: "成長童書", image: "/assets/images/book03.jpg", rating: 4.8 },
+            //     { title: "Sunrise on the Reaping", author: "Suzanne Collins", price: 19.47, category: "小說文學", image: "/assets/images/book04.jpg", rating: 4.9 },
+            //     { title: "The Let Them Theory", author: "Mel Robbins", price: 15.97, category: "心理勵志", image: "/assets/images/book05.jpg", rating: 4.5 },
+            // ],
+            
+            categories: [],
+            books: {},
+            booksByCategory: {},
+        };
+
+        // 初始化首頁應用程式
+        initializeApp(homePageData);
+    </script>
+</body>
+
+</html>
