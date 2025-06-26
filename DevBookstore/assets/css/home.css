@@ -251,6 +251,7 @@ a.sidebar-link {
 
 .card-list .card-link .card-image {
   width: 100%;
+  height: 200px;
 }
 
 .card-list .card-link .card-title{

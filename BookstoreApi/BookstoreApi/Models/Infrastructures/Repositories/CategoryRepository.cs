@@ -1,4 +1,5 @@
 ﻿using BookstoreApi.Models.DTOs.HOME;
+using BookstoreApi.Models.EFModels;
 using BookstoreApi.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,12 +15,13 @@ namespace BookstoreApi.Models.Infrastructures.Repositories
             // 人工分類補上（不在 DB）
             var extra = new List<CategoryDTO>
         {
-            new CategoryDTO { CategoryID = -1, Name = "暢銷作品" },
-            new CategoryDTO { CategoryID = -2, Name = "推薦作品" }
+            new CategoryDTO { CategoryId = -1, Name = "推薦作品" },
+            new CategoryDTO { CategoryId = -2, Name = "暢銷作品" },
+            new CategoryDTO { CategoryId = -3, Name = "所有作品" },
         };
 
             return dbCategories
-                .Select(c => new CategoryDTO { CategoryID = c.CategoryID, Name = c.CategoryName })
+                .Select(c => new CategoryDTO { CategoryId = c.CategoryId, Name = c.CategoryName })
                 .Concat(extra)
                 .ToList();
         }

@@ -5,9 +5,9 @@
         <ul class="sidebar-nav p-0">
             <li class="sidebar-header">
             </li>
-            <li v-for="(category, index) in categories" :key="index"
-                class="list-group-item category" :class="{ active: currentcategory === category.value }">
-                <a href="#" class="sidebar-link" @click.prevent="$emit('select-category', category.value)">{{ category.name }}</a>
+            <li v-for="(category, index) in sidebarCategories" :key="index"
+                class="list-group-item category" :class="{ active: currentCategory === category.name }">
+                <a href="#" class="sidebar-link" @click.prevent="$emit('select-category', category.name)">{{ category.name }}</a>
             </li>
         </ul>
     </aside>

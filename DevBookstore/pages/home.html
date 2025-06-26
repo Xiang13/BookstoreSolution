@@ -21,34 +21,34 @@
 <body>
     <div id="app">
         <!-- 標題 -->
-        <header-bar :categories="specialCategories" :reset="resetSearch" :show-search="true" @login-click="showLoginModal"
+        <header-bar :header-categories="displayCategories" :show-search="true" @login-click="showLoginModal"
             @home-click="goHome" @select-category="selectCategory"></header-bar>
 
         <!-- 內容 -->
         <div class="container">
             <div class="row mt-5">
                 <!-- 側邊分類欄 -->
-                <side-bar :categories="categories" :currentcategory="currentTab" @select-category="selectCategory"></side-bar>
+                <side-bar :sidebar-categories="categories" :current-category="currentTab" @select-category="selectCategory"></side-bar>
                 <!-- 書籍區塊 -->
                 <div class="col-md-10 swiper">
                     <div>
                         <h2>書籍專區</h2>
                     </div>
                     <!-- 作品輪播 -->
-                    <books-carousel v-if="currentTab === null && !selectedBook" :all-categories="allCategories"
-                        :books="books" @select-category="selectCategory"
+                    <books-carousel v-if="currentTab === null && !selectedBook" :all-categories="displayCategories"
+                        :carousel-books-map="carouselBooks" @select-category="selectCategory"
                         @select-book="selectedBook = $event"></books-carousel>
                     <!-- 書籍展示 -->
-                    <books-list v-if="currentTab !== null && !selectedBook" :books="filteredBooks" :title="currentTab"
+                    <books-list v-else-if="currentTab !== null && !selectedBook" :books="filteredBooks" :title="currentTab"
                         @select-book="selectedBook = $event"> </books-list>
                     <!-- 書籍詳細資料 -->
-                    <book-detail v-if="selectedBook" :book="selectedBook"></book-detail>
+                    <book-detail v-else :book="selectedBook"></book-detail>
                 </div>
             </div>
         </div>
 
         <!-- 頁尾 -->
-        <footer-bar :categories="specialCategories" :currentcategory="currentTab"
+        <footer-bar :categories="categories" :currentcategory="currentTab"
             @select-category="selectCategory"></footer-bar>
 
         <!-- 登入 / 註冊 -->
@@ -63,37 +63,84 @@
     
     <script>
         // 頁面特定的資料
-        const homePageData = {
-            // 書籍類別資料
-            // categories: [
-            //     { name: "暢銷作品", value: "暢銷作品", isSpecial: true },
-            //     { name: "推薦作品", value: "推薦作品", isSpecial: true },
-            //     { name: "所有書籍", value: "所有書籍", isAllCategory: true },
-            //     { name: "心理勵志", value: "心理勵志" },
-            //     { name: "成長童書", value: "成長童書" },
-            //     { name: "小說文學", value: "小說文學" },
-            // ],
-            // 書籍資料
-            // books: [
-            //     { title: "The Let Them Theory", author: "Mel Robbins", price: 15.97, category: "心理勵志", image: "/assets/images/book01.jpg", rating: 4.5 },
-            //     { title: "Oh, the Places You'll Go!", author: "Dr. Seuss", price: 12.77, category: "成長童書", image: "/assets/images/book02.jpg", rating: 4.8 },
-            //     { title: "Sunrise on the Reaping", author: "Suzanne Collins", price: 19.47, category: "小說文學", image: "/assets/images/book03.jpg", rating: 4.9 },
-            //     { title: "The Let Them Theory", author: "Mel Robbins", price: 15.97, category: "心理勵志", image: "/assets/images/book04.jpg", rating: 4.5 },
-            //     { title: "Oh, the Places You'll Go!", author: "Dr. Seuss", price: 12.77, category: "成長童書", image: "/assets/images/book05.jpg", rating: 4.8 },
-            //     { title: "Sunrise on the Reaping", author: "Suzanne Collins", price: 19.47, category: "小說文學", image: "/assets/images/book01.jpg", rating: 4.9 },
-            //     { title: "The Let Them Theory", author: "Mel Robbins", price: 15.97, category: "心理勵志", image: "/assets/images/book02.jpg", rating: 4.5 },
-            //     { title: "Oh, the Places You'll Go!", author: "Dr. Seuss", price: 12.77, category: "成長童書", image: "/assets/images/book03.jpg", rating: 4.8 },
-            //     { title: "Sunrise on the Reaping", author: "Suzanne Collins", price: 19.47, category: "小說文學", image: "/assets/images/book04.jpg", rating: 4.9 },
-            //     { title: "The Let Them Theory", author: "Mel Robbins", price: 15.97, category: "心理勵志", image: "/assets/images/book05.jpg", rating: 4.5 },
-            // ],
-            
+        let homePageData = {           
+            // 書籍分類選項
+            displayCategories: [],
             categories: [],
-            books: {},
-            booksByCategory: {},
+
+            // 書籍分類
+            carouselBooks: {}
         };
 
+        let homePageMethod = {
+
+            // 取得分類選項
+            async fetchCategories() {
+                try {
+                    const res = await axios.get("https://localhost:7023/api/Home/categories");
+                    this.categories = res.data.sort((a, b) => {
+                        // 將 categoryID 為負的項目排到最前面，並依照原始 ID 排序
+                        const isASpecial = a.categoryId < 0;
+                        const isBSpecial = b.categoryId < 0;
+
+                         // 負數之間照 ID 排
+                        if (isASpecial && isBSpecial) {
+                            return a.categoryId - b.categoryId;
+                        }
+                         // a 是特殊分類，排前面
+                        if (isASpecial) return -1;
+                          // b 是特殊分類，排前面
+                        if (isBSpecial) return 1;
+
+                         // 正數照正常順序
+                        return a.categoryId - b.categoryId;
+                    });
+
+                     this.displayCategories = this.categories.filter(c => c.categoryId >= 0 || c.categoryId > -3);
+
+                } catch(err){
+                    console.error("無法取得分類資料", err);
+                }
+
+                 this.fetchAllCarouselBooks(); // ← 載入輪播書籍
+            },
+            
+            // 取得書籍資料
+            async fetchAllCarouselBooks() {
+                let carouselMap = {};
+                for (const cat of this.categories) {
+                    try {
+                        let res = await axios.get(`https://localhost:7023/api/Home/carousel/all`);
+                        
+                        
+
+                        for (const group of res.data) {
+                            // 為每個分類建立對應書籍資料
+                            carouselMap[group.categoryName] = group.books.map(book => ({
+                                ...book,
+                                coverImage: `/assets/images/${book.coverImage}`
+                            }));
+                        }
+                    } catch (err) {
+                        console.warn(`無法載入 ${cat.name} 的輪播資料`, err);
+                    }
+                }
+                this.carouselBooks = carouselMap;
+            },
+        }
+
         // 初始化首頁應用程式
-        initializeApp(homePageData);
+        initializeApp(
+            homePageData,
+            homePageMethod,
+            {
+                mounted() {
+                    this.fetchCategories();
+                    // console.log('homepage - start');
+
+                }
+            }
+        );
     </script>
 </body>
 

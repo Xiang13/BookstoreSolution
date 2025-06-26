@@ -8,6 +8,7 @@ namespace BookstoreApi.Controllers
     [Route("api/[controller]")]
     public class HomeController : ControllerBase
     {
+        // 宣告一個欄位來保存注入進來的服務物件，型別為介面（抽象層）
         private readonly IHomeService _homeService;
 
         public HomeController(IHomeService homeService)
@@ -24,10 +25,10 @@ namespace BookstoreApi.Controllers
         }
 
         // 輪播
-        [HttpGet("carousel/{categoryName}")]
-        public async Task<IActionResult> GetBooksByCategory(string categoryName)
+        [HttpGet("carousel/all")]
+        public async Task<IActionResult> GetBooksByCategory()
         {
-            var data = await _homeService.GetBooksForCarouselAsync(categoryName);
+            var data = await _homeService.GetBooksForCarouselAsync();
             return Ok(data);
         }
     }

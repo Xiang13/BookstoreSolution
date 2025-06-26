@@ -17,20 +17,10 @@
         }
       }
     },
-    "/api/Home/carousel/{categoryName}": {
+    "/api/Home/carousel/all": {
       "get": {
         "tags": [
           "Home"
-        ],
-        "parameters": [
-          {
-            "name": "categoryName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
         ],
         "responses": {
           "200": {

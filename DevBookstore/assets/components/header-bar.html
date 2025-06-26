@@ -44,7 +44,7 @@
                                 <div class="input-group">
                                     <!-- 分類選單 -->                                    
                                     <select class="form-select" v-model="searchCategory" style="max-width: 120px;">
-                                        <option v-for="category in categories" :key="category.value" :value="category.value">
+                                        <option v-for="category in headerCategories" :key="category.name" :value="category.name">
                                             {{ category.name }}
                                         </option>
                                     </select>

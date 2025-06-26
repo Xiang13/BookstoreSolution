@@ -1,4 +1,6 @@
-﻿namespace BookstoreApi.Models.Infrastructures.Repositories
+﻿using BookstoreApi.Models.EFModels;
+
+namespace BookstoreApi.Models.Infrastructures.Repositories
 {
     public abstract class BaseRepository
     {

@@ -20,9 +20,10 @@ namespace BookstoreApi.Services
             return await _categoryRepo.GetAllCategoriesAsync();
         }
 
-        public async Task<List<BookDTO>> GetBooksForCarouselAsync(string categoryName)
+        public async Task<List<CarouselSectionDTO>> GetBooksForCarouselAsync()
         {
-            return await _bookRepo.GetBooksByCategoryAsync(categoryName, 10);
+            int carouselCount = 10;
+            return await _bookRepo.GetBooksByCategoryAsync(carouselCount);
         }
 
         public async Task<List<BookDTO>> SearchBooksAsync(BookSearchVM search)

@@ -20,19 +20,20 @@ class ComponentManager {
 
     // 註冊所有共用元件
     registerAllComponents() {
+
         // 標題元件
         this.registerComponent("header-bar", "../assets/components/header-bar.html", {
             definition: {
-                props: ["categories", "reset", "show-search"],
+                props: ["headerCategories", "showSearch"],
                 data() {
                     return {
-                        searchCategory: "所有書籍"
+                        searchCategory: "",
                     }
-                },
+                },                
                 watch: {
-                    reset(newVal) {
-                        if (newVal) {
-                            this.searchCategory = "所有書籍";
+                    headerCategories(newVal) {
+                        if (newVal && newVal.length > 0) {
+                            this.searchCategory = newVal[0].name;
                         }
                     }
                 }
@@ -91,14 +92,14 @@ class ComponentManager {
         // 側邊欄元件
         this.registerComponent("side-bar", "../assets/components/side-bar.html", {
             definition: {
-                props: ["categories", "currentcategory"],
+                props: ["sidebarCategories", "currentCategory"],
             }
         });
 
         // 輪播元件
         this.registerComponent("books-carousel", "../assets/components/books-carousel.html", {
             definition: {
-                props: ["allCategories", "books"],
+                props: ["allCategories", "carouselBooksMap"],
                 methods: {
                     emitSelectCategory(category) {
                         this.$emit("select-category", category);
@@ -110,23 +111,33 @@ class ComponentManager {
                         this.$emit("select-book", book);
                     },
                     initSwipers() {
+                        // console.log('initswipers - start');
                         this.allCategories.forEach((cat, index) => {
-                            const refItem = this.$refs['swiper' + index];
-                            const container = Array.isArray(refItem) ? refItem[0] : refItem;
+                            let refItem = this.$refs['swiper' + index];
+                            let container = Array.isArray(refItem) ? refItem[0] : refItem;
+                            
+                            // 判斷是否已初始化過
+                            if (!container || container.swiper) {
+                                return;
+                            }
 
                             if (container instanceof Element) {
+                                let paginationEl = container.querySelector(".swiper-pagination");
+                                let nextEl = container.querySelector(".swiper-button-next");
+                                let prevEl = container.querySelector(".swiper-button-prev");
+                                let bookCount = this.carouselBooksMap[cat.name]?.length || 0;
                                 new Swiper(container, {
-                                    loop: true,
-                                    slidesPerView: 4,
+                                    loop: bookCount > 4,
+                                    slidesPerView: Math.min(bookCount, 4),
                                     spaceBetween: 20,
                                     pagination: {
-                                        el: ".swiper-pagination",
+                                        el: paginationEl,
                                         clickable: true,
                                         dynamicBullets: true,
                                     },
                                     navigation: {
-                                        nextEl: ".swiper-button-next",
-                                        prevEl: ".swiper-button-prev",
+                                        nextEl: nextEl,
+                                        prevEl: prevEl,
                                     },
                                     breakpoints: {
                                         0: { slidesPerView: 1 },
@@ -138,28 +149,25 @@ class ComponentManager {
                                 console.warn("swiper 容器無效", cat.value, refItem);
                             }
                         });
+                        //  console.log('initswipers - end');
                     },
-                    
-                    // todo
-                    async fetchCategories() {
-                        const res = await axios.get("/api/home/categories");
-                        this.categories = res.data;
-
-                        // 為每個分類載入對應的書籍
-                        for (const cat of this.categories) {
-                            this.fetchBooksForCategory(cat.name);
-                        }
-                    },
-
-                    async fetchBooksForCategory(categoryName) {
-                        const res = await axios.get(`/api/home/carousel/${encodeURIComponent(categoryName)}`);
-                        this.$set(this.booksByCategory, categoryName, res.data);
+                                    
+                },
+                watch: {
+                    carouselBooksMap: {
+                        handler() {
+                            this.$nextTick(() => {
+                                setTimeout(() => {
+                                    this.initSwipers();
+                                }, 50);
+                            });
+                        },
+                        deep: true,
                     }
                 },
-                mounted() {                    
-                    this.$nextTick(this.initSwipers);
-                    // todo
-                    this.fetchCategories();
+                mounted() {
+                    this.initSwipers();
+                    // console.log("初始化 Swiper");
                 }
             }
         });
@@ -189,13 +197,13 @@ class ComponentManager {
                 props: ["memberfields", "editstatus", "member", "reset"],
                 data() {
                     return {
-                        searchCategory: "所有書籍"
+                        searchCategory: ""
                     }
                 },
                 watch: {
                     reset(newVal) {
                         if (newVal) {
-                            this.searchCategory = "所有書籍";
+                            this.searchCategory = "所有作品";
                         }
                     }
                 }
@@ -255,34 +263,37 @@ class ComponentManager {
 const CommonVueMixin = {
     data() {
         return {
+            // 預設狀態資料，控制登入視窗、目前分類、目前點擊的書籍、是否要重置搜尋分類
             showLogin: false,
             currentTab: null,
             selectedBook: null,
             resetSearch: null,
         }
     },
-    computed: {
-        specialCategories() {
-            return this.categories.filter(c => !c.isSpecial)
-        },
-        allCategories() {
-            return this.categories.filter(c => !c.isAllCategory)
-        },
+    computed: {       
         filteredBooks() {
             if (!this.currentTab) return []
-            if (this.currentTab === "所有書籍") {
+            if (this.currentTab === "所有作品") {
                 return this.books || [];
             }
             return (this.books || []).filter(book => book.category === this.currentTab)
         }
     },
     methods: {
+        // 預設分類
+        getDefaultCategory() {
+            const allCat = this.categories.find(c => c.categoryID === -3);
+            return allCat ? allCat.name : "";
+        },
+
+        // 更新目前的分類
         selectCategory(categoryValue) {
             this.currentTab = categoryValue;
             this.selectedBook = null;
             window.scrollTo(0, 0);
         },
         
+        //  控制登入/註冊視窗顯示與隱藏
         showLoginModal() {
             this.showLogin = true;
         },
@@ -304,16 +315,22 @@ const CommonVueMixin = {
 };
 
 // 初始化應用程式的通用函數
-function initializeApp(specificData = {}, specificMethods = {}) {
+function initializeApp(specificData = {}, specificMethods = {}, extraOptions = {}) {
+    // 載入 HTML 元件（ 例如 header-bar、login-modal ...）
     const componentManager = new ComponentManager();
+    // 一次註冊所有共用 Vue 組件
     componentManager.registerAllComponents();
     
+    //  等待所有組件（使用 fetch(url) 載入）都完成註冊後再執行 Vue 實例初始化
     return componentManager.waitForAllComponents().then(() => {
         return new Vue({
             el: "#app",
+            // 使用一個共用 mixin，提供共享的 data、methods、computed 屬性
             mixins: [CommonVueMixin],
             data: {
+                // 合併共用資料 + 專屬頁面資料 (categories, books)
                 ...CommonVueMixin.data(),
+                // 合併共用方法（例如 goHome, selectCategory）和頁面專屬方法（fetchCategories）
                 ...specificData
             },
             methods: {
@@ -321,8 +338,9 @@ function initializeApp(specificData = {}, specificMethods = {}) {
                 ...specificMethods
             },
             mounted() {
-                // 可以在這裡添加頁面特定的初始化邏輯
-            }
+                console.log('app - start');
+            },
+            ...extraOptions
         });
     });
 }
