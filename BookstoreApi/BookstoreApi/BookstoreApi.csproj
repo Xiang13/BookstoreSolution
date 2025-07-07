@@ -20,4 +20,11 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\DTOs\Users\" />
+    <Folder Include="Models\Infrastructures\Extensions\Mapping\Auth\" />
+    <Folder Include="Models\Infrastructures\Repositories\Auth\" />
+    <Folder Include="Services\Auth\Interfaces\" />
+  </ItemGroup>
+
 </Project>

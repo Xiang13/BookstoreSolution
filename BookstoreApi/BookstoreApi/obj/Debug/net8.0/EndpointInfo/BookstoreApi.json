@@ -5,10 +5,10 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/Home/categories": {
+    "/api/Book/categories": {
       "get": {
         "tags": [
-          "Home"
+          "Book"
         ],
         "responses": {
           "200": {
@@ -17,10 +17,39 @@
         }
       }
     },
-    "/api/Home/carousel/all": {
+    "/api/Book/carousel/all": {
       "get": {
         "tags": [
-          "Home"
+          "Book"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Book/books": {
+      "get": {
+        "tags": [
+          "Book"
+        ],
+        "parameters": [
+          {
+            "name": "CategoryId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Keyword",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "200": {

@@ -9,7 +9,7 @@ public partial class User
 {
     public int UserId { get; set; }
 
-    public string UserName { get; set; }
+    public string DisplayName { get; set; }
 
     public string Email { get; set; }
 
@@ -22,4 +22,6 @@ public partial class User
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+
+    public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
 }

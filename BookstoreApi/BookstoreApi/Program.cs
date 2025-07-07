@@ -1,6 +1,6 @@
 
 using BookstoreApi.Models.EFModels;
-using BookstoreApi.Models.Infrastructures.Extensions;
+using BookstoreApi.Models.Infrastructures.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +18,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
-// 自動註冊 Services 和 Repositories（請視你的實際命名空間）
+// 自動註冊 Services 和 Repositories
 builder.Services.AddServicesByConvention("BookstoreApi.Services");
 builder.Services.AddServicesByConvention("BookstoreApi.Infrastructures");
 
@@ -27,7 +27,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.WithOrigins("http://127.0.0.1:5500")
+        policy.WithOrigins("http://localhost:5173")
               .AllowAnyMethod()
               .AllowAnyHeader();
     });
