@@ -29,7 +29,7 @@ namespace BookstoreApi.Services.Books
             return dtoList;    
         }
 
-        // 取得輪播資料
+        // 根據分類取得書籍輪播
         public async Task<IEnumerable<CarouselSectionDTO>> GetBooksForCarouselAsync()
         {
             int carouselCount = 10;
@@ -37,11 +37,11 @@ namespace BookstoreApi.Services.Books
 
             // 1️. 推薦作品（高評分）
             var recommended = await _bookRepo.GetTopRatedBooksAsync(4.0, carouselCount);
-            result.Add(recommended.ToCarouselSectionDTO("推薦作品", isSpecial: true));
+            result.Add(recommended.ToCarouselSectionDTO("推薦作品"));
 
             // 2️. 暢銷作品（銷售量）
             var bestSellers = await _bookRepo.GetBestSellingBooksAsync(carouselCount);
-            result.Add(bestSellers.ToCarouselSectionDTO("暢銷作品", isSpecial: true));
+            result.Add(bestSellers.ToCarouselSectionDTO("暢銷作品"));
 
             // 3️. 一般分類
             var categories = await _bookRepo.GetAllCategoryListAsync();

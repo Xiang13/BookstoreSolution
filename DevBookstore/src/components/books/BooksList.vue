@@ -1,6 +1,9 @@
 <template>
   <div id="bookList" class="row">
-    <div
+    <div v-if="bookStore.noResult" class="text-center">
+      <h2 class="col-md-4 my-5">查無符合條件的書籍</h2>
+    </div>
+    <div v-else
       class="col-md-4 my-5"
       v-for="book in books"
       :key="book.id"

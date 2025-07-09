@@ -13,19 +13,29 @@
             </ul>
           </div>
           <!-- 右側 -->
-          <div class="col-md-6 text-end">
-            <ul class="navbar-nav flex-row justify-content-end">
-              <li class="nav-item">
-                <a class="nav-link me-3" href="/member?page=member">會員</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link me-3" href="/member?page=orders">訂單</a>
-              </li>
+           <div v-if="!authStore.isLoggedIn" class="col-md-6 text-end">
+            <ul class="navbar-nav flex-row justify-content-end">              
               <li class="nav-item">
                 <a class="nav-link me-3" href="#" @click="uiStore.openLogin">登入 / 註冊</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/member?page=cart">購物車</a>
+                <a class="nav-link" href="/user?page=cart">購物車</a>
+              </li>
+            </ul>
+          </div>
+          <div v-else class="col-md-6 text-end">
+            <ul class="navbar-nav flex-row justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link me-3" href="/user?page=member">{{displayName}}, 會員</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link me-3" href="/user?page=orders">訂單</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link me-3" href="#" @click="handleLogout">登出</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user?page=cart">購物車</a>
               </li>
             </ul>
           </div>
@@ -78,14 +88,18 @@ import { useRouter } from 'vue-router'
 import { useUIStore  } from '@/stores/uiStore.js'
 import { useBookStore } from '@/stores/bookStore.js'
 import { useCategoryStore } from '@/stores/categoryStore'
+import { useAuthStore } from '@/stores/authStore'
 
 // store 實例
 const uiStore = useUIStore()
 const bookStore = useBookStore()
 const categoryStore = useCategoryStore()
+const authStore = useAuthStore()
 
 const router = useRouter()
 const showSearch = true;
+const displayName = localStorage.getItem('displayName');
+
 
 defineProps({
   headerCategories: Array
@@ -96,9 +110,12 @@ const goHomePage = () => {
   router.push('/')
 }
 
-// 登入視窗
-const openLoginClick = () => {
-  uiStore.openLogin()
+// 登出
+const handleLogout = () => {
+  authStore.logout()
+  alert('已成功登出')
+  // 可選擇導頁，例如回首頁
+  window.location.href = '/'
 }
 </script>
 

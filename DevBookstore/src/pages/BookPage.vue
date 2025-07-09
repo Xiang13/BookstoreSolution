@@ -5,7 +5,14 @@
     <div class="container">
       <div class="row mt-4">
         <!-- 側邊欄 -->
-        <SideBar class="col-md-2" :sidebarCategories="categoryStore.sidebarCategories"/>
+        <!-- <SideBar class="col-md-2" :sidebarCategories="categoryStore.sidebarCategories"/> -->
+         <SideBar
+            v-model="bookStore.bookCurrentTab"
+            :sidebarCategories="categoryStore.sidebarCategories"
+            keyField="categoryId"
+            labelField="categoryName"
+            :onItemSelected="handleBookCategoryChange"
+          />
         <div class="col-md-10">
           <div v-if="uiStore.loadingMap.books" class="d-flex justify-content-center align-items-center" style="height: 750px;">
             <div class="spinner-border" role="status">
@@ -15,11 +22,11 @@
           <div v-else>
             <!-- 書籍輪播 -->          
             <BooksCarousel
-              v-if="!bookStore.currentTab && !bookStore.selectedBook"
+              v-if="!bookStore.bookCurrentTab && !bookStore.selectedBook"
               :categories="categoryStore.carouselCategories"
               :carouselBooksMap="categoryStore.carouselBooks"
             />
-            <BooksList v-else-if="bookStore.currentTab && !bookStore.selectedBook" :books="bookStore.filteredBooks" />
+            <BooksList v-else-if="bookStore.bookCurrentTab && !bookStore.selectedBook" :books="bookStore.filteredBooks" />
             <!-- 書籍詳細內容 -->
             <BookDetail  v-else-if="bookStore.selectedBook" :book="bookStore.selectedBook" />
           </div>
@@ -29,11 +36,10 @@
     </div>
 
     <!-- 頁尾 -->
-    <FooterBar
-      :footer-categories="categoryStore.footerCategories"
-    />
+    <FooterBar :footer-categories="categoryStore.footerCategories" />
 
-     <LoginModal />
+    <!-- 登入 / 登出視窗 -->
+     <UserAuthModal />
   </div>
 </template>
 
@@ -52,7 +58,7 @@ import BooksList from '@/components/books/BooksList.vue'
 import BookDetail from '@/components/books/BookDetail.vue'
 
 // models
-import LoginModal from '@/components/modals/LoginModal.vue'
+import UserAuthModal from '@/components/modals/UserAuthModal.vue'
 
 // stores
 import { useUIStore } from '@/stores/uiStore'
@@ -79,4 +85,7 @@ onMounted(async () => {
   }    
 })
 
+const handleBookCategoryChange = (categoryId) => {
+  bookStore.fetchBooks({ categoryId })
+}
 </script>

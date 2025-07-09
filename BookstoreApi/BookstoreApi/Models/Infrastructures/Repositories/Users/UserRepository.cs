@@ -2,13 +2,13 @@
 using BookstoreApi.Models.Infrastructures.Repositories.Base;
 using BookstoreApi.Services.Users.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
-namespace BookstoreApi.Models.Infrastructures.Repositories.Users
+namespace BookstoreApi.Models.Infrastructures.Repositories.Books
 {
-    public class UserRepository : BaseRepository, IUserRepository       
+    public class UserRepository : BaseRepository, IUserRepository
     {
         public UserRepository(AppDbContext context) : base(context) { }
-
         public Task<bool> CheckPasswordAsync(User user, string password)
         {
             throw new NotImplementedException();
@@ -19,9 +19,9 @@ namespace BookstoreApi.Models.Infrastructures.Repositories.Users
             throw new NotImplementedException();
         }
 
-        public Task<User> GetByEmailAsync(string email)
+        public async Task<User> GetByEmailAsync(string email)
         {
-            throw new NotImplementedException();
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
     }
 }

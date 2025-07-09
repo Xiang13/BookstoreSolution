@@ -21,10 +21,6 @@
 defineProps({
   book: Object,
 })
-
-
-
-
 </script>
 
 <style scoped>

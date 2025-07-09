@@ -63,16 +63,14 @@ const initSwipers = () => {
     const paginationEl = container.querySelector('.swiper-pagination')
     const nextEl = container.querySelector('.swiper-button-next')
     const prevEl = container.querySelector('.swiper-button-prev')
-    const bookCount = props.carouselBooksMap[cat.name]?.length || 0
 
     new Swiper(container, {
-      loop: bookCount > 4,
-      slidesPerView: Math.min(bookCount, 4),
+      loop: true,
       spaceBetween: 20,
       pagination: {
         el: paginationEl,
         clickable: true,
-        dynamicBullets: true
+        dynamicBullets: true,        
       },
       navigation: {
         nextEl: nextEl,

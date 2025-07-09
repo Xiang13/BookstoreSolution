@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.6">
@@ -22,9 +23,6 @@
 
   <ItemGroup>
     <Folder Include="Models\DTOs\Users\" />
-    <Folder Include="Models\Infrastructures\Extensions\Mapping\Auth\" />
-    <Folder Include="Models\Infrastructures\Repositories\Auth\" />
-    <Folder Include="Services\Auth\Interfaces\" />
   </ItemGroup>
 
 </Project>

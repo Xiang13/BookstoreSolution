@@ -92,12 +92,11 @@ namespace BookstoreApi.Models.Infrastructures.Extensions.Mapping.Books
             };
         }
     
-        public static CarouselSectionDTO ToCarouselSectionDTO(this IEnumerable<Book> books, string categoryName, bool isSpecial = false)
+        public static CarouselSectionDTO ToCarouselSectionDTO(this IEnumerable<Book> books, string categoryName)
         {
             return new CarouselSectionDTO
             {
                 CategoryName = categoryName,
-                IsSpecial = isSpecial,
                 Books = books.ToBookDTO()
             };
         }

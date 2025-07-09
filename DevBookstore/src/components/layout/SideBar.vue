@@ -5,15 +5,25 @@
       <!-- 導覽列 -->
       <ul class="sidebar-nav p-0">
         <li class="sidebar-header"></li>
-        <li
+        <!-- <li
           v-for="(category, index) in sidebarCategories"
           :key="index"
           class="list-group-item category"
-          :class="{ active:  bookStore.currentTab === category.categoryId }"
-          @click="bookStore.fetchBooks(category)"
-        >
+          :class="{ active: category.categoryId === bookStore.bookCurrentTab }"
+          @click="bookStore.fetchBooks(category)" >
           <a href="#" class="sidebar-link">
             {{ category.categoryName }}
+          </a>
+        </li> -->
+        <li
+          v-for="(item, index) in sidebarCategories"
+          :key="index"
+          class="list-group-item category"
+          :class="{ active: item[keyField] === modelValue }"
+          @click="updateItemValue(item[keyField])"
+        >
+          <a href="#" class="sidebar-link">
+            {{ item[labelField] }}
           </a>
         </li>
       </ul>
@@ -22,15 +32,41 @@
 </template>
 
 <script setup>
-defineProps({
-  sidebarCategories: Array
+const props = defineProps({
+  // 所有選項
+  sidebarCategories: Array,
+  // v-model 綁定的資料
+  modelValue: [String, Number],
+  // 例如 'categoryId' 或 'key'
+  keyField: String,
+  // 例如 'categoryName' 或 'name'
+  labelField: String,
+  // 當項目被選中時的 callback
+  onItemSelected: Function
 })
+const emit = defineEmits(['update:modelValue'])
+
+const updateItemValue = (key) => {
+  emit('update:modelValue', key)
+  props.onItemSelected?.(key)
+
+  // // 依據傳入 type 決定行為
+  // if (props.type === 'book') {
+  //   bookStore.fetchBooks({categoryId: key})
+  // } else if (props.type === 'user') {
+  //   console.log('[SideBar] 會員功能點擊:', key)
+  //   // 同上，可做對應動作或觸發事件
+  // }
+}
+
 
 // store
 import { useBookStore } from '@/stores/bookStore'
+import { useUserStore } from '@/stores/userStore'
 
 // store 實例
 const bookStore = useBookStore()
+const userStore = useUserStore()
 
 </script>
 

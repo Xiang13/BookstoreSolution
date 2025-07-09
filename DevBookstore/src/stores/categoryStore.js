@@ -36,7 +36,7 @@ export const useCategoryStore = defineStore('category', () => {
             if (headerCategories.value.length > 0) {
                selectedCategoryId.value = headerCategories.value[0].categoryId
             }
-            console.log(categories.value)
+            // console.log('所有分類', categories.value)
         } catch (err) {
             console.error('載入分類失敗', err)
         }

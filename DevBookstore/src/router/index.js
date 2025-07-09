@@ -1,13 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import BookPage from '@/pages/BookPage.vue'
-import MemberPage from '@/pages/MemberPage.vue'
+import UserPage from '@/pages/UserPage.vue'
 
 const routes = [
   { path: '/', component: BookPage },
-  { path: '/member', component: MemberPage },
+  { path: '/user', component: UserPage },
 ]
 
 export default createRouter({
   history: createWebHistory(),
   routes
 })
+
+// cd C:\GitRepos\BookstoreSolution\DevBookstore

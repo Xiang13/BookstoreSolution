@@ -532,3 +532,4 @@ C:\GitRepos\BookstoreSolution\BookstoreApi\BookstoreApi\obj\Debug\net8.0\Booksto
 C:\GitRepos\BookstoreSolution\BookstoreApi\BookstoreApi\obj\Debug\net8.0\BookstoreApi.genruntimeconfig.cache
 C:\GitRepos\BookstoreSolution\BookstoreApi\BookstoreApi\obj\Debug\net8.0\ref\BookstoreApi.dll
 C:\GitRepos\BookstoreSolution\BookstoreApi\BookstoreApi\bin\Debug\net8.0\efpt.config.json
+C:\GitRepos\BookstoreSolution\BookstoreApi\BookstoreApi\bin\Debug\net8.0\BCrypt.Net-Next.dll
