@@ -33,6 +33,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<UserRole> UserRoles { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Author>(entity =>
@@ -121,7 +123,10 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.CategoryName)
                 .IsRequired()
-                .HasMaxLength(100);
+                .HasMaxLength(50);
+            entity.Property(e => e.Slug)
+                .IsRequired()
+                .HasMaxLength(50);
         });
 
         modelBuilder.Entity<Order>(entity =>
@@ -183,25 +188,24 @@ public partial class AppDbContext : DbContext
                 .IsRequired()
                 .HasMaxLength(255);
             entity.Property(e => e.RegisterDate).HasColumnType("datetime");
+        });
 
-            entity.HasMany(d => d.Roles).WithMany(p => p.Users)
-                .UsingEntity<Dictionary<string, object>>(
-                    "UserRole",
-                    r => r.HasOne<Role>().WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__UserRoles__RoleI__17F790F9"),
-                    l => l.HasOne<User>().WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__UserRoles__UserI__17036CC0"),
-                    j =>
-                    {
-                        j.HasKey("UserId", "RoleId").HasName("PK__UserRole__AF27604F11D48B33");
-                        j.ToTable("UserRoles");
-                        j.IndexerProperty<int>("UserId").HasColumnName("UserID");
-                        j.IndexerProperty<int>("RoleId").HasColumnName("RoleID");
-                    });
+        modelBuilder.Entity<UserRole>(entity =>
+        {
+            entity.HasKey(e => new { e.UserId, e.RoleId }).HasName("PK__UserRole__AF27604F11D48B33");
+
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+            entity.Property(e => e.RoleId).HasColumnName("RoleID");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.UserRoles)
+                .HasForeignKey(d => d.RoleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__UserRoles__RoleI__17F790F9");
+
+            entity.HasOne(d => d.User).WithMany(p => p.UserRoles)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__UserRoles__UserI__17036CC0");
         });
 
         OnModelCreatingPartial(modelBuilder);

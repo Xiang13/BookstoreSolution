@@ -1,5 +1,6 @@
-import { ref } from 'vue'
+import { watch, computed, ref } from 'vue'
 import { defineStore } from 'pinia'
+import { useRouter, useRoute } from 'vue-router'
 import axios from 'axios'
 
 // stores
@@ -25,17 +26,71 @@ export const useBookStore = defineStore('book', () => {
     const filteredBooks = ref([])
     // 查無結果
     const noResult = ref(false)
+    // 路由控制與狀態判斷
+    const route = useRoute()
+    const router = useRouter()
+
+    const isHome = computed(() => route.name === 'home')
+    const isBookListView = computed(() =>
+        !isHome.value && !selectedBook.value
+    )
+
+    const isCarouselView = computed(() =>
+        isHome.value && !selectedBook.value
+    )
+
+    const isBookDetailView = computed(() =>
+        !!selectedBook.value
+    )
+
+    const initRouteWatcher = () => {
+        watch(() => route.params.slug, async (newSlug) => {
+            if (newSlug !== undefined) {
+                const category = categoryStore.sidebarCategories.find(c => c.slug === newSlug)
+                await loadBooksBySlug(category)
+            }
+        })
+    }
+    // 根據 slug 載入對應分類書籍
+    const loadBooksBySlug = async (category) => {
+        const categoryId = category.categoryId || -3
+        const keyword = searchKeyword.value || ''
+        uiStore.loadingMap.books = true
+        try {
+            await fetchBooks({ categoryId, keyword })
+        } catch (err) {
+            console.error('loadBooksBySlug 錯誤', err)
+        } finally {
+            uiStore.loadingMap.books = false
+        }
+    }
+
+    const handleBookCategoryChange = (categoryId) => {
+        console.log('[BookPage] 切換到:', categoryId)
+        // 從 categoryStore 找出對應的名稱
+        const category = categoryStore.sidebarCategories.find(c => c.categoryId === categoryId)
+
+        // 對應到 slug，若找不到預設為 all
+        const slug = category.slug || 'all'
+
+        // 更新 URL
+        if (route.params.slug !== slug) {
+            router.push({ name: 'booksByCategory', params: { slug } })
+        }
+    }
+
+
     // 延遲
     const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
     // 回首頁
-    const goHome = async  () => {
+    const goHome = async () => {
         console.log("goHome start")
         try {
             uiStore.loadingMap.books = true
             searchKeyword.value = null
             bookCurrentTab.value = null
             selectedBook.value = null
-            
+
             // 下拉選單回到預設值
             if (categoryStore.headerCategories.length > 0) {
                 categoryStore.selectedCategoryId = categoryStore.headerCategories[0].categoryId
@@ -53,20 +108,13 @@ export const useBookStore = defineStore('book', () => {
 
     // 依分類或關鍵字載入書籍清單
     const fetchBooks = async ({ categoryId = null, keyword = '' } = {}) => {
-        const isSameCategory = categoryId === bookCurrentTab.value?.categoryId
-        const isSameKeyword = keyword === bookCurrentTab.value?.keyword
-        // 分類沒變就不重新載入
-        if (isSameCategory && isSameKeyword) {
-            console.log('分類與關鍵字皆未變，略過請求')
-            return
-        }
+        console.log("keyword", keyword)
         try {
             uiStore.loadingMap.books = true
             const params = {}
             if (categoryId) params.CategoryId = categoryId
             if (keyword) params.Keyword = keyword
             const res = await axios.get('/Book/books', { params })
-
             // 模擬延遲 0.5 秒
             await delay(500)
 
@@ -76,7 +124,7 @@ export const useBookStore = defineStore('book', () => {
             }))
             // 如果搜尋結果為 0 時
             noResult.value = filteredBooks.value.length === 0
-            bookCurrentTab.value = categoryId
+            bookCurrentTab.value = categoryId            
             window.scrollTo(0, 0)
             searchKeyword.value = null
             selectedBook.value = null
@@ -112,8 +160,14 @@ export const useBookStore = defineStore('book', () => {
         searchKeyword,
         filteredBooks,
         noResult,
+        isHome,
+        isCarouselView,
+        isBookListView,
         goHome,
         fetchBooks,
         selectBook,
+        initRouteWatcher,
+        loadBooksBySlug,
+        handleBookCategoryChange,
     }
 })

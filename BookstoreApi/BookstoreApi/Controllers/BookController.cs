@@ -1,6 +1,7 @@
 ﻿using BookstoreApi.Models.Infrastructures.Extensions.Mapping.Books;
 using BookstoreApi.Services.Books.Interfaces;
 using BookstoreApi.ViewModels.BooksVMs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookstoreApi.Controllers
@@ -18,6 +19,7 @@ namespace BookstoreApi.Controllers
         }
 
         // 取得分類資料
+        [AllowAnonymous]
         [HttpGet("categories")]
         public async Task<IActionResult> GetCategories()
         {
@@ -26,6 +28,7 @@ namespace BookstoreApi.Controllers
         }
 
         // 取得輪播資料
+        [AllowAnonymous]
         [HttpGet("carousel/all")]
         public async Task<IActionResult> GetCarousel()
         {
@@ -34,6 +37,7 @@ namespace BookstoreApi.Controllers
         }
 
         // 依照分類或關鍵字篩選資料
+        [AllowAnonymous]
         [HttpGet("books")]
         public async Task<IActionResult> GetBooks([FromQuery] BookQueryVM query)
         {

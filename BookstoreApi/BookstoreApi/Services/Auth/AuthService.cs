@@ -12,26 +12,23 @@ namespace BookstoreApi.Services.Auth
         public AuthService(IUserRepository userRepo)
         {
             _userRepo = userRepo;
-        }
-        public async Task<ApiResponse> LoginAsync(LoginDTO dto)
-        {
-            var user = await _userRepo.GetByEmailAsync(dto.Email);
-            if (user == null)
-                return ApiResponse.FailResult("帳號或密碼錯誤 帳號不存在");
+        }        
 
-            if(user.PasswordHash != dto.Password)
-            {
-                return ApiResponse.FailResult("帳號或密碼錯誤");
-            }
+        public async Task<UserDTO?> ValidateUserAsync(LoginDTO dto)
+        {
+            var user = await _userRepo.GetUserWithRolesAsync(dto.Email);
+            if (user == null) return null;
+            // 這裡可以改成加密密碼比對
             //if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
             //    return ApiResponse.FailResult("帳號或密碼錯誤");
 
-            return ApiResponse.SuccessResult(new
+            return new UserDTO
             {
-                user.UserId,
-                user.DisplayName,
-                user.Email
-            });
+                UserId = user.UserId,
+                Email = user.Email,
+                DisplayName = user.DisplayName,
+                Roles = user.UserRoles.Select(ur => ur.Role.RoleName).ToList()
+            };
         }
     }
 }

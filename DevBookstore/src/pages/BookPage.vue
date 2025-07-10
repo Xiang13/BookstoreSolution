@@ -11,7 +11,7 @@
             :sidebarCategories="categoryStore.sidebarCategories"
             keyField="categoryId"
             labelField="categoryName"
-            :onItemSelected="handleBookCategoryChange"
+            :onItemSelected="bookStore.handleBookCategoryChange"
           />
         <div class="col-md-10">
           <div v-if="uiStore.loadingMap.books" class="d-flex justify-content-center align-items-center" style="height: 750px;">
@@ -20,13 +20,13 @@
             </div>
           </div>
           <div v-else>
-            <!-- 書籍輪播 -->          
+            <!-- 書籍輪播 -->             
             <BooksCarousel
-              v-if="!bookStore.bookCurrentTab && !bookStore.selectedBook"
+              v-if="bookStore.isCarouselView"
               :categories="categoryStore.carouselCategories"
               :carouselBooksMap="categoryStore.carouselBooks"
             />
-            <BooksList v-else-if="bookStore.bookCurrentTab && !bookStore.selectedBook" :books="bookStore.filteredBooks" />
+            <BooksList v-else-if="bookStore.isBookListView" :books="bookStore.filteredBooks" />
             <!-- 書籍詳細內容 -->
             <BookDetail  v-else-if="bookStore.selectedBook" :book="bookStore.selectedBook" />
           </div>
@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { delay } from '@/utils/delay'
 
 // layout
@@ -75,8 +75,9 @@ onMounted(async () => {
   uiStore.loadingMap.books = true
   try {
       // 模擬延遲 0.5 秒
-      await delay(500)
+      await delay(500)       
       await categoryStore.fetchCarouselBooks()
+      await bookStore.initRouteWatcher()   
   } catch (err) {
       console.log("selectBook 錯誤", err)
   } finally {
@@ -84,8 +85,4 @@ onMounted(async () => {
       uiStore.loadingMap.books = false
   }    
 })
-
-const handleBookCategoryChange = (categoryId) => {
-  bookStore.fetchBooks({ categoryId })
-}
 </script>

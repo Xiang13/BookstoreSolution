@@ -18,10 +18,14 @@ namespace BookstoreApi.Models.Infrastructures.Repositories.Books
         {
             throw new NotImplementedException();
         }
+    
 
-        public async Task<User> GetByEmailAsync(string email)
+        public async Task<User?> GetUserWithRolesAsync(string email)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            return await _context.Users
+                .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
+                .FirstOrDefaultAsync(u => u.Email == email);
         }
     }
 }

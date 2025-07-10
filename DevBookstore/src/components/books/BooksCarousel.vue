@@ -7,7 +7,7 @@
     >
       <div class="carousel-header d-flex justify-content-between align-items-center">
         <h4 class="mt-5">{{ category.categoryName }}</h4>
-        <a href="#" @click.prevent="bookStore.selectCategory(category)">See All</a>
+        <a href="#" @click.prevent="bookStore.handleBookCategoryChange(category.categoryId)">See All</a>
       </div>
       <div class="card-container">
         <div class="card-wrapper swiper" :ref="el => swiperRefs[index] = el">
@@ -127,7 +127,8 @@ onMounted(() => {
 
 .card-wrapper .swiper-slide-button {
   margin-top: -60px;
-  margin-left: 5px;
+  margin-left: -10px;
+  margin-right: -10px;
   color: rgba(0, 0, 0, 0.202);
   transition: 0.3s;
 }

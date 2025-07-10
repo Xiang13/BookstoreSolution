@@ -22,7 +22,7 @@ export const useCategoryStore = defineStore('category', () => {
     const fetchCategories = async () => {
         try {
             const res = await axios.get('/Book/categories')
-            categories.value = res.data.sort((a, b) => a.categoryId - b.categoryId)            
+            categories.value = res.data.sort((a, b) => a.categoryId - b.categoryId)
             // 頁首分類
             headerCategories.value = categories.value.filter(c => c && (c.categoryId === -3 || c.categoryId > 0))
             // 側邊欄分類

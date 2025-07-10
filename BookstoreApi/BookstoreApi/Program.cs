@@ -6,6 +6,8 @@ using BookstoreApi.Services.Auth;
 using BookstoreApi.Services.Auth.Interfaces;
 using BookstoreApi.Services.Users.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +42,33 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddControllers();
 
+var secret = builder.Configuration["Jwt:Key"]
+             ?? throw new InvalidOperationException("Jwt:Key not found in configuration");
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(secret)
+            ),
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("MemberOnly", policy => policy.RequireRole("Member", "Admin"));
+    options.AddPolicy("GuestAccess", policy => policy.RequireRole("Guest", "Member", "Admin"));
+});
+
+// 自訂 JWT 產生服務
+builder.Services.AddScoped<JwtService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -54,6 +83,9 @@ app.UseHttpsRedirection();
 // 啟用 CORS
 app.UseCors("AllowAll");
 
+// 解析 Token 建立 HttpContext.User
+app.UseAuthentication();
+// 根據使用者的角色（Role）或身份來判斷是否允許進入某些 API。
 app.UseAuthorization();
 
 app.MapControllers();

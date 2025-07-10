@@ -17,16 +17,6 @@
   },
   {
     "ContainingType": "BookstoreApi.Controllers.AuthController",
-    "Method": "Logout",
-    "RelativePath": "api/Auth/logout",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "BookstoreApi.Controllers.AuthController",
     "Method": "GetCurrentUser",
     "RelativePath": "api/Auth/me",
     "HttpMethod": "GET",

@@ -1,12 +1,13 @@
-// stores/uiStore.js
+// 管理 UI 狀態的 Pinia store
 import { defineStore } from 'pinia'
 import { reactive, ref } from 'vue'
 import { delay } from '@/utils/delay'
 
 export const useUIStore = defineStore('ui', () => {
+  // 控制是否顯示登入 Modal
   const showLogin = ref(false)
+  // 控制載入動畫
   const isLoading = ref(false)  
-
   // 管理 loading 狀態
   const loadingMap = reactive({
     // 登入 / 註冊

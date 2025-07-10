@@ -6,11 +6,11 @@
       <div class="row mt-4">
         <!-- 側邊欄 -->
         <SideBar
-          v-model="userStore.userCurrentTab"
-          :sidebarCategories="userStore.sidebarCategories"
+          v-model="memberStore.userCurrentTab"
+          :sidebarCategories="memberStore.sidebarCategories"
           keyField="key"
           labelField="categoryName"
-          :onItemSelected="handleUserTabChange"
+          :onItemSelected="handleMemberTabChange"
         />
         <div class="col-md-10">
           <div v-if="uiStore.loadingMap.user" class="d-flex justify-content-center align-items-center" style="height: 750px;">
@@ -42,10 +42,10 @@ import HeaderBar from '@/components/layout/HeaderBar.vue'
 import SideBar from '@/components/layout/SideBar.vue'
 import FooterBar from '@/components/layout/FooterBar.vue'
 
-// user
-import Member from '@/components/user/Member.vue'
-import Orders from '@/components/user/Orders.vue'
-import Cart from '@/components/user/Cart.vue'
+// member
+import Member from '@/components/member/Member.vue'
+import Orders from '@/components/member/Orders.vue'
+import Cart from '@/components/member/Cart.vue'
 
 // models
 import UserAuthModal from '@/components/modals/UserAuthModal.vue'
@@ -53,21 +53,21 @@ import UserAuthModal from '@/components/modals/UserAuthModal.vue'
 // stores
 import { useUIStore } from '@/stores/uiStore'
 import { useCategoryStore } from '@/stores/categoryStore'
-import { useUserStore } from '@/stores/userStore'
+import { useMemberStore } from '@/stores/MemberStore'
 
 // store 實例
 const uiStore = useUIStore()
 const categoryStore = useCategoryStore()
-const userStore = useUserStore()
+const memberStore = useMemberStore()
 
-const handleUserTabChange = (key) => {
+const handleMemberTabChange = (key) => {
   console.log('[UserPage] 切換到:', key)
   // 這裡可選擇載入資料，如 fetchOrders() 等
 }
 
 const currentTabComponent = computed(() => {
-  switch (userStore.userCurrentTab) {
-    case 'profile': return Member
+  switch (memberStore.userCurrentTab) {
+    case 'member': return Member
     case 'orders': return Orders
     case 'cart': return Cart
   }

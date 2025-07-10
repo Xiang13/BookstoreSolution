@@ -5,11 +5,13 @@ using System.Collections.Generic;
 
 namespace BookstoreApi.Models.EFModels;
 
-public partial class Role
+public partial class UserRole
 {
+    public int UserId { get; set; }
+
     public int RoleId { get; set; }
 
-    public string RoleName { get; set; }
+    public virtual Role Role { get; set; }
 
-    public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
+    public virtual User User { get; set; }
 }

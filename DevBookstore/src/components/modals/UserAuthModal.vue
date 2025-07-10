@@ -148,19 +148,15 @@ const handleLogin = async () => {
   try {    
     uiStore.loadingMap.auth = true
     await delay(500)
+    
     const res = await axios.post('/Auth/login', {
       Email: loginData.value.email,
       Password: loginData.value.password,
     })
-    
     if (res.status === 200) {
-      const { token, message } = res.data
-      
-      // 儲存 token
-      authStore.login(res.data.data.displayName)
-      localStorage.setItem('userId', res.data.data.userId)
-      localStorage.setItem('displayName', res.data.data.displayName)
-      localStorage.setItem('token', token)
+      const { token, message } = res.data      
+
+      localStorage.setItem('token', token)      
 
       uiStore.closeLogin()
     }

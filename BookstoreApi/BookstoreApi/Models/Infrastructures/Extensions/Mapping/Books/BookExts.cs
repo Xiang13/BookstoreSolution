@@ -18,7 +18,8 @@ namespace BookstoreApi.Models.Infrastructures.Extensions.Mapping.Books
             return dtos.Select(dto => new CategoryVM
             {
                 CategoryId = dto.CategoryId,
-                CategoryName = dto.CategoryName
+                CategoryName = dto.CategoryName,
+                Slug = dto.Slug,
             }).ToList();
         }
 
@@ -88,7 +89,8 @@ namespace BookstoreApi.Models.Infrastructures.Extensions.Mapping.Books
             return new CategoryDTO
             {
                 CategoryId = category.CategoryId,
-                CategoryName = category.CategoryName
+                CategoryName = category.CategoryName,
+                Slug = category.Slug,
             };
         }
     
