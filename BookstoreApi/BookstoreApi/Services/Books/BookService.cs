@@ -21,9 +21,9 @@ namespace BookstoreApi.Services.Books
             var dtoList = categories.Select(c => c.ToCategoryDTO()).ToList();
             dtoList.InsertRange(0, new List<CategoryDTO>
             {
-                new CategoryDTO { CategoryId = -1, CategoryName = "推薦作品" },
-                new CategoryDTO { CategoryId = -2, CategoryName = "暢銷作品" },
-                new CategoryDTO { CategoryId = -3, CategoryName = "所有作品" },
+                new CategoryDTO { CategoryId = -1, CategoryName = "推薦作品", Slug = "recommend" },
+                new CategoryDTO { CategoryId = -2, CategoryName = "暢銷作品", Slug = "bestseller" },
+                new CategoryDTO { CategoryId = -3, CategoryName = "所有作品", Slug = "all" },
             });
 
             return dtoList;    

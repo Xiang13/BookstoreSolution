@@ -1,8 +1,11 @@
 ﻿using BookstoreApi.Models.DTOs.Auth;
+using BookstoreApi.Models.EFModels;
 using BookstoreApi.Models.Infrastructures.Extensions.Mapping.Auth;
 using BookstoreApi.Services.Auth;
 using BookstoreApi.Services.Auth.Interfaces;
 using BookstoreApi.ViewModels.AuthVMs;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -13,31 +16,52 @@ namespace BookstoreApi.Controllers
     public class AuthController : ControllerBase
     {
         private readonly AuthService _authService;
+        private readonly JwtService _jwtService;
 
-        public AuthController(AuthService authService)
+        public AuthController(AuthService authService, JwtService jwtService)
         {
             _authService = authService;
+            _jwtService = jwtService;
         }
         // 登入
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginVM vm)
         {            
-            var result = await _authService.LoginAsync(vm.ToLoginDTO());
-
-            if (!result.Success)
-                return Unauthorized(result.Message);
-
-            return Ok(result);
+            var user = await _authService.ValidateUserAsync(vm.ToLoginDTO());            
+            var token = _jwtService.GenerateToken(user);
+            Response.Cookies.Append("access_token", token, new CookieOptions
+            {
+                HttpOnly = true,
+                //Secure = true,  // 若在本機測試 http，可暫時設 false
+                //SameSite = SameSiteMode.Strict,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddHours(1),
+                Path = "/"
+            });
+            return Ok(new { message = "登入成功" });
         }
 
         // 登出
+        [Authorize]
         [HttpPost("logout")]
         public IActionResult Logout()
         {
-            throw new NotImplementedException();
+            //Response.Cookies.Delete("access_token");
+            Response.Cookies.Delete("access_token", new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddDays(-1), // 雖然 Delete 會自動處理，這只是保險
+                Path = "/"
+            });
+            return Ok(new { message = "已登出" });
         }
 
         // 註冊
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDTO dto)
         {

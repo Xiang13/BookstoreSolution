@@ -14,8 +14,9 @@
           <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
             <h5 class="text-uppercase">分類選單</h5>
             <ul class="list-unstyled mb-0">
-              <li v-for="category in footerCategories" :key="category.categoryId">
-                <a href="#" @click.prevent=bookStore.fetchBooks(category)>
+              <li v-for="category in footerCategories"
+                :key="category.categoryId">
+                <a href="#" @click = bookStore.handleBookCategoryChange(category.categoryId)>
                   {{ category.categoryName }}
                 </a>
               </li>
@@ -25,9 +26,9 @@
           <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
             <h5 class="text-uppercase">會員專區</h5>
             <ul class="list-unstyled mb-0">
-              <li><a href="#!">個人會員</a></li>
-              <li><a href="#!">訂單</a></li>
-              <li><a href="#!">購物車</a></li>
+              <li><a href="#" @click="memberStore.handleMemberTabChange('member')">個人會員</a></li>
+              <li><a href="#" @click="memberStore.handleMemberTabChange('orders')">訂單</a></li>
+              <li><a href="#" @click="memberStore.handleMemberTabChange('cart')">購物車</a></li>
             </ul>
           </div>
 
@@ -65,15 +66,31 @@
 </template>
 
 <script setup>
-defineProps({
-  footerCategories: Array
+const props = defineProps({
+  footerCategories: Array,
+  modelValue: [String, Number],
+  // 例如 'categoryId' 或 'key'
+  keyField: String,
+  // 例如 'categoryName' 或 'name'
+  labelField: String,
+  // 當項目被選中時的 callback
+  onItemSelected: Function
 })
 
 // store
 import { useBookStore } from '@/stores/bookStore'
+import { useMemberStore } from '@/stores/memberStore'
 
 // store 實例
 const bookStore = useBookStore()
+const memberStore = useMemberStore()
+
+const emit = defineEmits(['update:modelValue'])
+
+const updateItemValue = (key) => {
+  emit('update:modelValue', key)
+  props.onItemSelected?.(key)
+}
 </script>
 
 <style scoped>

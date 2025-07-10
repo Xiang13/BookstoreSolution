@@ -13,29 +13,26 @@
             </ul>
           </div>
           <!-- 右側 -->
-           <div v-if="!authStore.isLoggedIn" class="col-md-6 text-end">
+          <div v-if="!authStore.isLoggedIn" class="col-md-6 text-end">
             <ul class="navbar-nav flex-row justify-content-end">              
               <li class="nav-item">
                 <a class="nav-link me-3" href="#" @click="uiStore.openLogin">登入 / 註冊</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/user?page=cart">購物車</a>
               </li>
             </ul>
           </div>
           <div v-else class="col-md-6 text-end">
             <ul class="navbar-nav flex-row justify-content-end">
               <li class="nav-item">
-                <a class="nav-link me-3" href="/user?page=member">{{displayName}}, 會員</a>
+                <a class="nav-link me-3" href="#" @click="memberStore.handleMemberTabChange('profile')">{{authStore.userProfile.displayName}}, 會員</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link me-3" href="/user?page=orders">訂單</a>
+                <a class="nav-link me-3" href="#" @click="memberStore.handleMemberTabChange('orders')">訂單</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link me-3" href="#" @click="handleLogout">登出</a>
+                <a class="nav-link me-3" href="#" @click="authStore.handleLoginout()">登出</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/user?page=cart">購物車</a>
+                <a class="nav-link" href="#" @click="memberStore.handleMemberTabChange('cart')">購物車</a>
               </li>
             </ul>
           </div>
@@ -62,10 +59,8 @@
                 <!-- 搜尋輸入欄 -->
                 <input type="text" class="form-control" v-model="bookStore.searchKeyword" placeholder="搜尋書籍" aria-label="搜尋書籍" />
                 <!-- 搜尋按鈕 -->
-                <button class="btn btn-warning" @click.prevent="bookStore.fetchBooks({
-                  categoryId: categoryStore.selectedCategoryId,
-                  keyword: bookStore.searchKeyword
-                })">搜尋</button>
+                <button class="btn btn-warning" @click.prevent="bookStore.handleBookCategoryChange(categoryStore.selectedCategoryId)">搜尋</button>
+                
               </div>
             </form>
           </div>
@@ -89,16 +84,17 @@ import { useUIStore  } from '@/stores/uiStore.js'
 import { useBookStore } from '@/stores/bookStore.js'
 import { useCategoryStore } from '@/stores/categoryStore'
 import { useAuthStore } from '@/stores/authStore'
+import { useMemberStore } from '@/stores/memberStore'
 
 // store 實例
 const uiStore = useUIStore()
 const bookStore = useBookStore()
 const categoryStore = useCategoryStore()
 const authStore = useAuthStore()
+const memberStore = useMemberStore()
 
 const router = useRouter()
 const showSearch = true;
-const displayName = localStorage.getItem('displayName');
 
 
 defineProps({
@@ -114,7 +110,7 @@ const goHomePage = () => {
 const handleLogout = () => {
   authStore.logout()
   alert('已成功登出')
-  // 可選擇導頁，例如回首頁
+  // 回首頁
   window.location.href = '/'
 }
 </script>

@@ -4,17 +4,7 @@
     <aside id="sidebar">
       <!-- 導覽列 -->
       <ul class="sidebar-nav p-0">
-        <li class="sidebar-header"></li>
-        <!-- <li
-          v-for="(category, index) in sidebarCategories"
-          :key="index"
-          class="list-group-item category"
-          :class="{ active: category.categoryId === bookStore.bookCurrentTab }"
-          @click="bookStore.fetchBooks(category)" >
-          <a href="#" class="sidebar-link">
-            {{ category.categoryName }}
-          </a>
-        </li> -->
+        <li class="sidebar-header"></li>        
         <li
           v-for="(item, index) in sidebarCategories"
           :key="index"
@@ -32,6 +22,7 @@
 </template>
 
 <script setup>
+
 const props = defineProps({
   // 所有選項
   sidebarCategories: Array,
@@ -49,24 +40,7 @@ const emit = defineEmits(['update:modelValue'])
 const updateItemValue = (key) => {
   emit('update:modelValue', key)
   props.onItemSelected?.(key)
-
-  // // 依據傳入 type 決定行為
-  // if (props.type === 'book') {
-  //   bookStore.fetchBooks({categoryId: key})
-  // } else if (props.type === 'user') {
-  //   console.log('[SideBar] 會員功能點擊:', key)
-  //   // 同上，可做對應動作或觸發事件
-  // }
 }
-
-
-// store
-import { useBookStore } from '@/stores/bookStore'
-import { useUserStore } from '@/stores/userStore'
-
-// store 實例
-const bookStore = useBookStore()
-const userStore = useUserStore()
 
 </script>
 

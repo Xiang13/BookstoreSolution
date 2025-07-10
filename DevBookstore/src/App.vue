@@ -7,15 +7,15 @@
 import { onMounted } from 'vue'
 import { useCategoryStore } from '@/stores/categoryStore'
 import { useUIStore } from '@/stores/uiStore'
-import { delay } from '@/utils/delay'
 import { useAuthStore } from '@/stores/authStore'
+import { delay } from '@/utils/delay'
 
 const authStore = useAuthStore()
 const categoryStore = useCategoryStore()
 const uiStore = useUIStore()
 
 onMounted(async () => {
-  authStore.checkLoginStatus()
+  authStore.checkAuthStatus()
   uiStore.loadingMap.auth = true
   try {
       // 模擬延遲 0.5 秒

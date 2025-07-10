@@ -107,5 +107,15 @@
     "Order": 0,
     "Parameters": [],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookstoreApi.Controllers.MemberController",
+    "Method": "GetUserProfile",
+    "RelativePath": "api/Member/profile",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   }
 ]
