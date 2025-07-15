@@ -1,14 +1,16 @@
 // 管理使用者登入狀態的 Pinia store
 import { useUIStore } from '@/stores/uiStore'
+import { useBookStore } from '@/stores/bookStore'
 import { defineStore } from 'pinia'
 import { delay } from '@/utils/delay'
 import { ref } from 'vue'
 import axios from 'axios'
-// import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 
 
 export const useAuthStore = defineStore('auth', () => {
   const uiStore = useUIStore()
+  const bookStore = useBookStore()
   const isLoggedIn = ref(false)
   const userProfile = ref({
     userId: null,
@@ -17,7 +19,7 @@ export const useAuthStore = defineStore('auth', () => {
     roles: []
   });
   const isRegistering = ref(false)
-  // const router = useRouter()
+  const router = useRouter()
   // 勾選狀態
   const rememberMe = ref(false)
   const agreeTerms = ref(false)
@@ -28,7 +30,7 @@ export const useAuthStore = defineStore('auth', () => {
   const loginData = ref({ email: '', password: '' })
   // 註冊資料
   const registerData = ref({ userName: '', email: '', password: '', confirmPassword: '' })
-  // 登入狀態
+  // 登入
   const isInitialized = ref(false)
 
   // 登入狀態
@@ -48,8 +50,8 @@ export const useAuthStore = defineStore('auth', () => {
         const { message } = res.data;
         console.log("message", message)
         // 登入成功後馬上初始化狀態
-        await checkAuthStatus() 
-
+        await checkAuthStatus()
+        bookStore.resetBookPageState()
       } else{
       }
       if (rememberMe.value) {
@@ -83,8 +85,7 @@ export const useAuthStore = defineStore('auth', () => {
         email: user.email,
         roles: user.roles,
       }
-      console.log("使用者資料", userProfile.value)
-      isLoggedIn.value = true
+      isLoggedIn.value = true      
       
     } catch (err) {
       if (err.response && err.response.status === 401) {
@@ -107,7 +108,9 @@ export const useAuthStore = defineStore('auth', () => {
     if (!confirmLogout) {
       return; // 使用者按取消
     }
+    uiStore.loadingMap.auth = true
     try{
+      await delay(500)
       await axios.post('/auth/logout', null, { withCredentials: true });
       isLoggedIn.value = false
       userProfile.value = {
@@ -116,14 +119,16 @@ export const useAuthStore = defineStore('auth', () => {
         email: '',
         roles: []
       }
-      router.push('/').then(() => {
-        location.reload();
-      });
+      bookStore.resetBookPageState()
       console.log("登出成功 ")
+      bookStore.resetBookPageState()
+      router.push('/')
     } catch (err) {
       alert("登出失敗");
       console.error(err);
-    }    
+    } finally {
+        uiStore.loadingMap.auth = false
+    }
   }
   // 註冊
   const handleRegister = async () => {

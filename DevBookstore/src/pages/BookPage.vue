@@ -74,7 +74,7 @@ onMounted(async () => {
   uiStore.loadingMap.books = true
   try {
       // 模擬延遲 0.5 秒
-      await delay(500)
+      await delay(500)       
       await categoryStore.fetchCarouselBooks()
       await bookStore.initRouteWatcher()   
   } catch (err) {

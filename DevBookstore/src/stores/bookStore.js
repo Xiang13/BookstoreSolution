@@ -94,14 +94,7 @@ export const useBookStore = defineStore('book', () => {
         console.log("goHome start")
         try {
             uiStore.loadingMap.books = true
-            searchKeyword.value = null
-            bookCurrentTab.value = null
-            selectedBook.value = null
-
-            // 下拉選單回到預設值
-            if (categoryStore.headerCategories.length > 0) {
-                categoryStore.selectedCategoryId = categoryStore.headerCategories[0].categoryId
-            }
+            resetBookPageState()
             // 模擬延遲 0.5 秒
             await delay(500)
         }
@@ -160,6 +153,19 @@ export const useBookStore = defineStore('book', () => {
         }
     }
 
+    // 回首頁 清空資料
+    const resetBookPageState = () => {
+        searchKeyword.value = null
+        bookCurrentTab.value = null
+        selectedBook.value = null
+
+        // 重設分類下拉選單為第一項（如果有）
+        if (categoryStore.headerCategories.length > 0) {
+            categoryStore.selectedCategoryId = categoryStore.headerCategories[0].categoryId
+        }
+    }
+
+
     return {
         books,
         selectedBook,
@@ -176,5 +182,6 @@ export const useBookStore = defineStore('book', () => {
         initRouteWatcher,
         loadBooksBySlug,
         handleBookCategoryChange,
+        resetBookPageState,
     }
 })
