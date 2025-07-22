@@ -19,7 +19,7 @@
             </div>
           </div>
           <div v-else>
-            <!-- 書籍輪播 -->             
+            <!-- 書籍輪播 -->
             <BooksCarousel
               v-if="bookStore.isCarouselView"
               :categories="categoryStore.carouselCategories"
@@ -43,9 +43,10 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
 import { delay } from '@/utils/delay'
 
+import { useRouter, useRoute } from 'vue-router'
+import { onMounted, onUnmounted, watch } from 'vue'
 // layout
 import HeaderBar from '@/components/layout/HeaderBar.vue'
 import SideBar from '@/components/layout/SideBar.vue'
@@ -69,14 +70,13 @@ const uiStore = useUIStore()
 const bookStore = useBookStore()
 const categoryStore = useCategoryStore()
 
-// 掛載時執行
 onMounted(async () => {
   uiStore.loadingMap.books = true
   try {
       // 模擬延遲 0.5 秒
       await delay(500)       
       await categoryStore.fetchCarouselBooks()
-      await bookStore.initRouteWatcher()   
+      await bookStore.initRouteWatcher()
   } catch (err) {
       console.log("BookPage 錯誤", err)
   } finally {
@@ -84,4 +84,8 @@ onMounted(async () => {
       uiStore.loadingMap.books = false
   }    
 })
+// onUnmounted(() => {
+//   window.removeEventListener('popstate', onPopState)
+// })
+
 </script>

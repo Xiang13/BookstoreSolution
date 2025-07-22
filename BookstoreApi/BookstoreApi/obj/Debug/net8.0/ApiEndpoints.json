@@ -110,6 +110,42 @@
   },
   {
     "ContainingType": "BookstoreApi.Controllers.MemberController",
+    "Method": "GetUserCart",
+    "RelativePath": "api/Member/cartItems",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookstoreApi.Controllers.MemberController",
+    "Method": "GetUserOrderDetail",
+    "RelativePath": "api/Member/orderDetail",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orderId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookstoreApi.Controllers.MemberController",
+    "Method": "GetUserOrders",
+    "RelativePath": "api/Member/orders",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookstoreApi.Controllers.MemberController",
     "Method": "GetUserProfile",
     "RelativePath": "api/Member/profile",
     "HttpMethod": "GET",

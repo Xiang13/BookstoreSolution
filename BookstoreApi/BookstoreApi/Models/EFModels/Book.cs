@@ -31,7 +31,7 @@ public partial class Book
 
     public virtual ICollection<BookReview> BookReviews { get; set; } = new List<BookReview>();
 
-    public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
+    public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
 
     public virtual Category Category { get; set; }
 

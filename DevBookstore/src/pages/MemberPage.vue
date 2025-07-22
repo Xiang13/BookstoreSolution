@@ -5,22 +5,14 @@
     <div class="container">
       <div class="row mt-4">
         <!-- 側邊欄 -->
-        <SideBar
-          v-model="memberStore.userCurrentTab"
-          :sidebarCategories="memberStore.sidebarCategories"
-          keyField="key"
-          labelField="categoryName"
-          :onItemSelected="memberStore.handleMemberTabChange"
-        />
+        <MemberSideBar :sidebarCategories="memberStore.sidebarCategories" />
         <div class="col-md-10">
           <div v-if="uiStore.loadingMap.user" class="d-flex justify-content-center align-items-center" style="height: 750px;">
             <div class="spinner-border" role="status">
               <span class="visually-hidden">Loading...</span>
             </div>
           </div>
-          <Profile v-if="memberStore.userCurrentTab === 'profile'" v-model:profile="authStore.userProfile" />
-          <OrdersList v-else-if="memberStore.userCurrentTab === 'orders'"  />
-          <CartView v-else-if="memberStore.userCurrentTab === 'cart'"  />
+          <router-view v-else />
           
         </div>
       </div>
@@ -42,13 +34,8 @@ import { delay } from '@/utils/delay'
 
 // layout
 import HeaderBar from '@/components/layout/HeaderBar.vue'
-import SideBar from '@/components/layout/SideBar.vue'
+import MemberSideBar from '@/components/layout/MemberSideBar.vue'
 import FooterBar from '@/components/layout/FooterBar.vue'
-
-// member
-import Profile from '@/components/member/Profile.vue'
-import OrdersList from '@/components/member/Orders.vue'
-import CartView from '@/components/member/Cart.vue'
 
 // models
 import UserAuthModal from '@/components/modals/UserAuthModal.vue'
@@ -67,15 +54,15 @@ const memberStore = useMemberStore()
 
 const router = useRouter()
 
-watch(
-  () => authStore.isInitialized,
-  (ready) => {
-    if (ready && !authStore.isLoggedIn) {
-      router.push('/')
-      uiStore.openLogin()
-    }
-  },
-  { immediate: true }
-)
+// watch(
+//   () => authStore.isInitialized,
+//   (ready) => {
+//     if (ready && !authStore.isLoggedIn) {
+//       router.push('/')
+//       uiStore.openLogin()
+//     }
+//   },
+//   { immediate: true }
+// )
 
 </script>

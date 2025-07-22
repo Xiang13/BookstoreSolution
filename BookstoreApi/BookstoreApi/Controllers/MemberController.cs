@@ -28,5 +28,51 @@ namespace BookstoreApi.Controllers
 
             return Ok(user);
         }
+
+        // 取得使用者訂單資料
+        [Authorize]
+        [HttpGet("orders")]
+        public async Task<IActionResult> GetUserOrders()
+        {
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "userId");
+            if (userIdClaim == null) return Unauthorized("無效的使用者");
+            int userId = int.Parse(userIdClaim.Value);
+
+            var userOrders = await _memberService.GetUserOrderAsync(userId);
+            if (userOrders == null) return NotFound("找不到訂單資料");
+
+            return Ok(userOrders);
+        }
+
+        // 取得使用者訂單詳細資料
+        [Authorize]
+        [HttpGet("orderDetail")]
+        public async Task<IActionResult> GetUserOrderDetail(int orderId)
+        {
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "userId");
+            if (userIdClaim == null) return Unauthorized("無效的使用者");
+            int userId = int.Parse(userIdClaim.Value);
+
+
+            var userOrderDetail = await _memberService.GetOrderDetailAsync(orderId);
+            if (userOrderDetail == null) return NotFound("找不到訂單資料");
+
+            return Ok(userOrderDetail);
+        }
+
+        [Authorize]
+        [HttpGet("cartItems")]
+        public async Task<IActionResult> GetUserCart()
+        {
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "userId");
+            if (userIdClaim == null) return Unauthorized("無效的使用者");
+            int userId = int.Parse(userIdClaim.Value);
+
+            var userCart = await _memberService.GetUserCaryAsync(userId);
+
+            if (userCart == null) return NotFound("找不到購物車資料");
+
+            return Ok(userCart);
+        }
     }
 }

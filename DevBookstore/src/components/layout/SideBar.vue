@@ -4,7 +4,7 @@
     <aside id="sidebar">
       <!-- 導覽列 -->
       <ul class="sidebar-nav p-0">
-        <li class="sidebar-header"></li>        
+        <li class="sidebar-header"></li>
         <li
           v-for="(item, index) in sidebarCategories"
           :key="index"
@@ -36,7 +36,6 @@ const props = defineProps({
   onItemSelected: Function
 })
 const emit = defineEmits(['update:modelValue'])
-
 const updateItemValue = (key) => {
   emit('update:modelValue', key)
   props.onItemSelected?.(key)

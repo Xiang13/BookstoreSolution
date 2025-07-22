@@ -13,9 +13,15 @@ public partial class OrderDetail
 
     public int BookId { get; set; }
 
+    public string BookTitle { get; set; }
+
     public int Quantity { get; set; }
 
     public decimal UnitPrice { get; set; }
+
+    public decimal Subtotal { get; set; }
+
+    public string ProductImage { get; set; }
 
     public virtual Book Book { get; set; }
 

@@ -73,7 +73,7 @@
           <p v-if="authStore.errors.agreeTerms" class="text-danger small">{{ authStore.errors.agreeTerms }}</p>
         </div>        
         <div class="submit-box">
-          <button type="button" class="submit-btn" @click="handleRegister">
+          <button type="button" class="submit-btn" @click="authStore.handleRegister">
             <span v-if="uiStore.loadingMap.auth">註冊中...</span>
             <span v-else>註冊</span>
           </button>

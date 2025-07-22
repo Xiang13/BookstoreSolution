@@ -10,13 +10,13 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src')
     }
   },
-  server: {
-    proxy: {
-      '/Book': {
-        target: 'https://localhost:7023', // 你的 ASP.NET Core 後端 API 網址
-        changeOrigin: true,
-        secure: false // 如果使用自簽憑證，需設定為 false
-      }
-    }
-  }
+  // server: {
+  //   proxy: {
+  //     '/Book': {
+  //       target: 'https://localhost:7023', // 你的 ASP.NET Core 後端 API 網址
+  //       changeOrigin: true,
+  //       secure: false // 如果使用自簽憑證，需設定為 false
+  //     }
+  //   }
+  // }
 })

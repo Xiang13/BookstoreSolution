@@ -1,5 +1,6 @@
 ﻿using BookstoreApi.Models.Common;
 using BookstoreApi.Models.DTOs.Auth;
+using BookstoreApi.Models.Infrastructures.Extensions.Mapping.Auth;
 using BookstoreApi.Services.Auth.Interfaces;
 using BookstoreApi.Services.Users.Interfaces;
 
@@ -22,15 +23,7 @@ namespace BookstoreApi.Services.Auth
             //if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
             //    return ApiResponse.FailResult("帳號或密碼錯誤");
 
-            return new UserDTO
-            {
-                UserId = user.UserId,
-                Email = user.Email,
-                DisplayName = user.DisplayName,
-                Address = user.Address,
-                PhoneNumber = user.PhoneNumber,
-                Roles = user.UserRoles.Select(ur => ur.Role.RoleName).ToList()
-            };
+            return user.ToUserDTO();            
         }
     }
 }

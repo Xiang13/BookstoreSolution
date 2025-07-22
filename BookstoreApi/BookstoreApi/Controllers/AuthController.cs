@@ -40,7 +40,9 @@ namespace BookstoreApi.Controllers
                 Expires = DateTime.UtcNow.AddHours(1),
                 Path = "/"
             });
-            return Ok(new { message = "登入成功" });
+            return Ok(new { message = "登入成功",
+                            expiresAt = DateTime.UtcNow.AddHours(1)
+            });
         }
 
         // 登出

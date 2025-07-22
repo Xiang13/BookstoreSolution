@@ -41,5 +41,24 @@ namespace BookstoreApi.Models.Infrastructures.Repositories.Books
                 .Select(ur => ur.Role.RoleName)
                 .ToListAsync();
         }
+        public async Task<IEnumerable<Order?>> GetOrderAsync(int userId)
+        {
+            IQueryable<Order> query = _context.Orders.Include(o => o.OrderDetails).Where(o => o.UserId == userId);
+            return await query.ToListAsync();
+        }
+
+        public async Task<Order?> GetOrderDetailAsync(int orderId)
+        {
+            return await _context.Orders
+                .Include(o => o.OrderDetails)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
+        }
+
+        public async Task<IEnumerable<CartItem?>> GetUserCaryItemAsync(int userId)
+        {
+            IQueryable<CartItem> query = _context.CartItems.Include(c => c.Book);
+            query = query.Where(c => c.Cart.UserId == userId);
+            return await query.ToListAsync();
+        }
     }
 }

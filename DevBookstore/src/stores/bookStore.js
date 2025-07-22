@@ -8,8 +8,6 @@ import { delay } from '@/utils/delay'
 import { useCategoryStore } from '@/stores/categoryStore'
 import { useUIStore } from '@/stores/uiStore'
 
-
-
 export const useBookStore = defineStore('book', () => {
     // store 實例
     const uiStore = useUIStore()
@@ -53,7 +51,12 @@ export const useBookStore = defineStore('book', () => {
                 loadBooksBySlug(category)
             }
         }
-        watch(() => route.params.slug, async (newSlug) => {
+        watch(() => route.params.slug, async (newSlug, oldSlug) => {
+            if (newSlug === oldSlug) {
+                console.log('[Books] slug 沒變，略過載入')
+                window.history.back()
+                return
+            }
             if (newSlug !== undefined) {
                 const category = categoryStore.sidebarCategories.find(c => c.slug === newSlug)
                 await loadBooksBySlug(category)
@@ -76,17 +79,16 @@ export const useBookStore = defineStore('book', () => {
         console.log('[BookPage] 切換到:', categoryId)
         bookCurrentTab.value = null
         // 從 categoryStore 找出對應的名稱
-        const category = categoryStore.sidebarCategories.find(c => c.categoryId === categoryId)        
-
+        const category = categoryStore.sidebarCategories.find(c => c.categoryId === categoryId)                
         // 對應到 slug，若找不到預設為 all
-        const slug = category.slug || 'all'        
-        // 更新 URL        
+        const slug = category.slug || 'all'
+        // // 更新 URL        
         if (route.params.slug !== slug) {
-            router.push({ name: 'booksByCategory', params: { slug } })
+            router.replace({ name: 'booksByCategory', params: { slug } })
         } else {
             // slug 沒變，手動重新載入
             loadBooksBySlug(category)
-        }
+        }        
     }
 
     // 回首頁
@@ -116,7 +118,7 @@ export const useBookStore = defineStore('book', () => {
             bookCurrentTab.value = categoryId
             const res = await axios.get('/Book/books', { params })
             // 模擬延遲 0.5 秒
-            // await delay(500)
+            await delay(500)
 
             filteredBooks.value = res.data.map(b => ({
                 ...b,

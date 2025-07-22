@@ -1,0 +1,314 @@
+* {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  box-sizing: border-box;
+}
+
+/* 遮罩 */
+.wrapper {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;  
+}
+
+/* 彈跳視窗 */
+.wrapper .form-box {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  min-width: 500px;
+  position: relative;
+  box-shadow: 0 0 30px rgba(0, 0, 0, .5);
+}
+
+.wrapper .form-box.register {
+  position: absolute;
+}
+
+.form-box h2 {
+  font-size: 2em;
+  color: #162938;
+  text-align: center;
+}
+
+.input-box {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  border-bottom: 2px solid #162938;
+  margin: 30px 0;
+}
+
+.input-box label{
+  position: absolute;
+  text-align: left;
+  top: 30%;
+  left: .5%;
+  pointer-events: none;
+  transition: .5s;
+}
+
+.input-box input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  font-size: 1em;
+  color: #162938;
+  font-weight: 600;
+}
+
+.input-box input:focus~label,
+.input-box input:not(:placeholder-shown)~label {
+  top : -15px;
+}
+
+.remember-forgot {
+  font-size: .9em;
+  color: #162938;
+  font-weight: 600;
+  margin: -15px 0 15px;
+  padding: 0 5px;
+  display: flex;
+  justify-content:space-between;
+}
+
+.remember-forgot a , .login-register a{
+  text-decoration: none;
+  color: #162938;
+}
+
+.remember-forgot a:hover , .login-register a:hover{
+  text-decoration:underline;
+}
+
+.login-btn {
+  color: white;
+  font-size: 1em;
+  width: 100%;
+  height: 45px;
+  background-color: #162938;
+  border: none;
+  outline: none;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  transition: .5s;
+}
+
+.login-btn:hover {
+  background-color: #10324d;
+}
+
+.login-register {
+  font-size: .9em;
+  color: #162938;
+  text-align: center;
+  font-weight: 600;
+  margin: 5px 0 10px;
+}
+
+.submit-btn {
+  margin: 5px 10px;
+  color: white;
+  font-size: 1em;
+  width: 30%;
+  height: 45px;
+  background-color: #162938;
+  border: none;
+  outline: none;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  transition: .5s;
+}
+
+.submit-btn:hover {
+  background-color: #10324d;
+}
+
+/* 彈跳視窗關閉按鈕 */
+.close-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  font-size: 2em;
+  color: #162938;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  margin: 10px;
+  transition: .3s;
+}
+.close-button:hover {
+  color: #335e7f;
+}
+
+/* 標題 */
+#site-header {
+  background-color: #3e4551;
+}
+
+#site-header a {
+  position: relative; 
+  text-decoration: none;
+  color: white; 
+  transition: 0.2s;
+}
+
+#site-header a:hover {
+  color: rgb(227, 144, 0);
+}
+
+#site-header a::after {
+  align-items: center;
+  left: 10%;
+  bottom: 2px;
+  content: '';
+  position: absolute;
+  width: 80%;
+  height: 3px;
+  background-color: #fff;
+  border-radius: 5px;
+  transform: scale(0);
+  transition: transform .3s;
+}
+
+#site-header a:hover::after { 
+  transform: scale(1);
+}
+
+/* 側邊欄 */
+#sidebar{
+  width: 120px;
+}
+
+.sidebar-nav a {
+  text-decoration: none;
+  color: black;
+}
+
+.sidebar-header {
+  /* padding: 0 .375rem; */
+  width: 100px;
+  height: 100px;
+}
+
+a.sidebar-link {
+  padding: 0.625rem 1.625rem;
+  display: block;
+}
+
+
+/* 內容 */
+.carousel-header a {
+  color: #162938;
+}
+
+.carousel-header a:hover {
+  color: #2167a1;
+}
+
+.books-content{
+  margin-left: -12px;
+}
+
+.list-group-item {
+  transition: all 0.2s;
+}
+
+.list-group-item:hover {
+  background-color: #03020230;
+}
+
+.sidebar-nav li.active {
+  background-color: #f0ad4e;
+}
+
+.card-container .card-wrapper{
+  padding-right: 80px;
+}
+
+.card-list .card-item .card-link{
+  width: 200px;
+  user-select: none;
+  display: block;
+  text-decoration: none;
+}
+
+.card-list .card-item .card-link:active{
+  cursor: grabbing;
+}
+
+.card-list .card-link .card-image {
+  width: 100%;
+  height: 200px;
+}
+
+.card-list .card-link .card-title{
+  margin: 10px 0px;
+  padding:10px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.card-wrapper .card-list{
+  width: 100%;
+}
+
+.card-wrapper .swiper-slide-button {
+  margin-top: -60px;
+  margin-left: -10px;
+  color: rgba(0, 0, 0, 0.202);
+  transition: 0.3s;
+}
+
+.card-wrapper .swiper-slide-button:hover {
+  color: rgb(227, 144, 0);
+}
+
+/* 購物車 */
+.cart-image {
+  width: 200px;
+}
+
+
+/* 頁尾 */
+.navBackToTop a{
+  padding: 5px;
+  display: block;
+  background-color: #353b4c;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  width: 100%;
+}
+
+.list-unstyled a {
+  text-decoration: none;
+  transition: all .2s;
+  color: white;
+}
+
+.list-unstyled li a:hover {
+  color: rgb(227, 144, 0);
+}
+
+@media screen and (max-width: 768px){
+  .card-wrapper {
+    margin: 0 10px 25px;
+  }
+
+  .card-wrapper .swiper-slide-button {
+    display: none;
+  }
+}

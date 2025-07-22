@@ -23,16 +23,16 @@
           <div v-else class="col-md-6 text-end">
             <ul class="navbar-nav flex-row justify-content-end">
               <li class="nav-item">
-                <a class="nav-link me-3" href="#" @click="memberStore.handleMemberTabChange('profile')">{{authStore.userProfile.displayName}}, 會員</a>
+                <router-link class="nav-link me-3" to="/member/profile">{{authStore.userProfile.displayName}}, 會員</router-link>
               </li>
               <li class="nav-item">
-                <a class="nav-link me-3" href="#" @click="memberStore.handleMemberTabChange('orders')">訂單</a>
+                <router-link class="nav-link me-3" to="/member/orders">訂單</router-link>
               </li>
               <li class="nav-item">
                 <a class="nav-link me-3" href="#" @click="authStore.handleLoginout()">登出</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#" @click="memberStore.handleMemberTabChange('cart')">購物車</a>
+                <router-link class="nav-link me-3" to="/member/cart">購物車</router-link>
               </li>
             </ul>
           </div>
@@ -104,14 +104,6 @@ defineProps({
 const goHomePage = () => {
   bookStore.goHome()
   router.push('/')
-}
-
-// 登出
-const handleLogout = () => {
-  authStore.logout()
-  alert('已成功登出')
-  // 回首頁
-  window.location.href = '/'
 }
 </script>
 

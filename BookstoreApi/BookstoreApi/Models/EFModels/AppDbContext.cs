@@ -96,15 +96,9 @@ public partial class AppDbContext : DbContext
             entity.HasKey(e => e.CartId).HasName("PK_ShoppingCarts");
 
             entity.Property(e => e.CartId).HasColumnName("CartID");
-            entity.Property(e => e.BookId).HasColumnName("BookID");
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
             entity.Property(e => e.UserId).HasColumnName("UserID");
-
-            entity.HasOne(d => d.Book).WithMany(p => p.Carts)
-                .HasForeignKey(d => d.BookId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_ShoppingCarts_Books");
 
             entity.HasOne(d => d.User).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.UserId)
@@ -114,8 +108,22 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<CartItem>(entity =>
         {
-            entity.Property(e => e.CartItemId).ValueGeneratedNever();
+            entity.Property(e => e.CartItemId)
+                .ValueGeneratedNever()
+                .HasColumnName("CartItemID");
+            entity.Property(e => e.BookId).HasColumnName("BookID");
+            entity.Property(e => e.CartId).HasColumnName("CartID");
             entity.Property(e => e.UnitPrice).HasColumnType("decimal(10, 2)");
+
+            entity.HasOne(d => d.Book).WithMany(p => p.CartItems)
+                .HasForeignKey(d => d.BookId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CartItems_Books");
+
+            entity.HasOne(d => d.Cart).WithMany(p => p.CartItems)
+                .HasForeignKey(d => d.CartId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CartItems_Carts");
         });
 
         modelBuilder.Entity<Category>(entity =>
@@ -135,7 +143,13 @@ public partial class AppDbContext : DbContext
         {
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.OrderDate).HasColumnType("datetime");
-            entity.Property(e => e.Status)
+            entity.Property(e => e.OrderStatus)
+                .IsRequired()
+                .HasMaxLength(50);
+            entity.Property(e => e.PaymentStatus)
+                .IsRequired()
+                .HasMaxLength(50);
+            entity.Property(e => e.PickupMethod)
                 .IsRequired()
                 .HasMaxLength(50);
             entity.Property(e => e.TotalAmount).HasColumnType("decimal(10, 2)");
@@ -151,7 +165,12 @@ public partial class AppDbContext : DbContext
         {
             entity.Property(e => e.OrderDetailId).HasColumnName("OrderDetailID");
             entity.Property(e => e.BookId).HasColumnName("BookID");
+            entity.Property(e => e.BookTitle)
+                .IsRequired()
+                .HasMaxLength(200);
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
+            entity.Property(e => e.ProductImage).HasMaxLength(255);
+            entity.Property(e => e.Subtotal).HasColumnType("decimal(10, 2)");
             entity.Property(e => e.UnitPrice).HasColumnType("decimal(10, 2)");
 
             entity.HasOne(d => d.Book).WithMany(p => p.OrderDetails)

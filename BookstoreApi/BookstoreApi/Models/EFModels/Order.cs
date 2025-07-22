@@ -15,7 +15,13 @@ public partial class Order
 
     public decimal TotalAmount { get; set; }
 
-    public string Status { get; set; }
+    public int TotalQuantity { get; set; }
+
+    public string OrderStatus { get; set; }
+
+    public string PaymentStatus { get; set; }
+
+    public string PickupMethod { get; set; }
 
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 

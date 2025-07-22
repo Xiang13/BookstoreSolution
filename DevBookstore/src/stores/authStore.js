@@ -16,6 +16,8 @@ export const useAuthStore = defineStore('auth', () => {
     userId: null,
     displayName: '',
     email: '',
+    phoneNumber: '',
+    address: '',
     roles: []
   });
   const isRegistering = ref(false)
@@ -77,12 +79,14 @@ export const useAuthStore = defineStore('auth', () => {
       const res = await axios.get('/Member/profile', {
         withCredentials: true
       })
-      await delay(500)
+      
       const user = res.data
       userProfile.value = {
         displayName: user.displayName,
         userId: user.userId,
         email: user.email,
+        phoneNumber: user.phoneNumber,
+        address: user.address,
         roles: user.roles,
       }
       isLoggedIn.value = true      
@@ -145,7 +149,7 @@ export const useAuthStore = defineStore('auth', () => {
       errors.value = {}
       switchAuthMode()
     } catch (err) {
-      alert('註冊失敗')
+        alert('註冊失敗')
     } finally {
       uiStore.loadingMap.auth = false
     }
@@ -188,7 +192,6 @@ export const useAuthStore = defineStore('auth', () => {
     if (!agreeTerms.value) {
       errors.value.agreeTerms = '請同意會員條款'
     }
-
     return Object.keys(errors.value).length === 0
   }
 
